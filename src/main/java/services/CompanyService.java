@@ -68,12 +68,13 @@ public class CompanyService {
     }
 
     public void deleteCompany(Integer id) {
+        CompanyDao company = new CompanyDao();
+        company.setCompanyId(id);
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
-            session.createQuery("DELETE FROM CompanyDao WHERE companyId = :id")
-                    .setParameter("id", id)
-                    .executeUpdate();
+            session.delete(company);
+            transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
