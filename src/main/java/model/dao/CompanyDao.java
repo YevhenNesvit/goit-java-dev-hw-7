@@ -1,9 +1,6 @@
 package model.dao;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "companies")
@@ -11,12 +8,6 @@ public class CompanyDao {
     Integer companyId;
     String name;
     String country;
-
-    public CompanyDao(Integer companyId, String name, String country) {
-        this.companyId = companyId;
-        this.name = name;
-        this.country = country;
-    }
 
     public CompanyDao() {
 
