@@ -5,15 +5,14 @@ import converter.CustomerConverter;
 import model.dao.CustomerDao;
 import model.dto.CustomerDto;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
-    private static final String DELETE_CUSTOMER = "DELETE FROM customers where customer_id = ?";
     private static final String SELECT_BY_ID = "SELECT customer_id, name, country FROM customers WHERE customer_id = ?";
-    private static final String INSERT = "INSERT INTO customers (customer_id, name, country) VALUES (?, ?, ?)";
     private static final String UPDATE_CUSTOMER = "UPDATE customers SET name = ?, country = ? WHERE customer_id = ?";
     CustomerConverter customerConverter = new CustomerConverter();
     private final HibernateProvider provider;
@@ -71,28 +70,30 @@ public class CustomerService {
     }
 
     public void deleteCustomer(Integer id) {
+        CustomerDao customer = new CustomerDao();
+        customer.setCustomerId(id);
 
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMER);
-//            statement.setInt(1, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.remove(customer);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void createCustomer(Integer customerId, String name, String country) {
+    public void createCustomer(Integer id, String name, String country) {
+        CustomerDao customer = new CustomerDao();
+        customer.setCustomerId(id);
+        customer.setName(name);
+        customer.setCountry(country);
 
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(INSERT);
-//            statement.setInt(1, customerId);
-//            statement.setString(2, name);
-//            statement.setString(3, country);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.persist(customer);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
