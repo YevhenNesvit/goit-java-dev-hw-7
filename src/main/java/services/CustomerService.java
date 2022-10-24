@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
-    private static final String SELECT_BY_ID = "SELECT customer_id, name, country FROM customers WHERE customer_id = ?";
     private static final String UPDATE_CUSTOMER = "UPDATE customers SET name = ?, country = ? WHERE customer_id = ?";
     CustomerConverter customerConverter = new CustomerConverter();
     private final HibernateProvider provider;
@@ -36,24 +35,20 @@ public class CustomerService {
         return new ArrayList<>();
     }
 
-    public CustomerDto customerById(Integer id) throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
-//            statement.setInt(1, id);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        CustomerDao customer = new CustomerDao();
-//        while (resultSet.next()) {
-//            customer = new CustomerDao(resultSet.getInt("customer_id"),
-//                    resultSet.getString("name"), resultSet.getString("country"));
-//        }
-//
-        return null;//customerConverter.from(customer);
+    public CustomerDto customerById(Integer id) {
+
+        try (final Session session = provider.openSession()) {
+            CustomerDao customer = session.createQuery("FROM Customer WHERE customerId = :id", CustomerDao.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+
+            return customerConverter.from(customer);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new CustomerDto();
     }
 
     public void updateCustomer(String name, String country, Integer id) {
