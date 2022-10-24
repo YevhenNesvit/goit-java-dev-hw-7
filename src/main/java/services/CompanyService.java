@@ -13,7 +13,7 @@ import java.util.List;
 
 public class CompanyService {
     CompanyConverter companyConverter = new CompanyConverter();
-    HibernateProvider provider;
+    private final HibernateProvider provider;
 
     public CompanyService(HibernateProvider provider) {
         this.provider = provider;
