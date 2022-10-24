@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
-    private static final String UPDATE_CUSTOMER = "UPDATE customers SET name = ?, country = ? WHERE customer_id = ?";
     CustomerConverter customerConverter = new CustomerConverter();
     private final HibernateProvider provider;
 
@@ -52,16 +51,19 @@ public class CustomerService {
     }
 
     public void updateCustomer(String name, String country, Integer id) {
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMER);
-//            statement.setString(1, name);
-//            statement.setString(2, country);
-//            statement.setInt(3, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+
+        CustomerDao customer = new CustomerDao();
+        customer.setCustomerId(id);
+        customer.setName(name);
+        customer.setCountry(country);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.merge(customer);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteCustomer(Integer id) {
