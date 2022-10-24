@@ -22,7 +22,6 @@ public class CompanyService {
     public List<CompanyDto> companiesList() throws SQLException {
 
         try (final Session session = provider.openSession()) {
-            final Transaction transaction = session.beginTransaction();
             List<CompanyDao> list = session.createQuery("FROM CompanyDao ORDER BY companyId", CompanyDao.class)
                     .list();
 
@@ -38,7 +37,6 @@ public class CompanyService {
     public CompanyDto companyById(Integer id) {
 
         try (final Session session = provider.openSession()) {
-            final Transaction transaction = session.beginTransaction();
             CompanyDao company = session.createQuery("FROM CompanyDao WHERE companyId = :id", CompanyDao.class)
                     .setParameter("id", id)
                     .getSingleResult();
