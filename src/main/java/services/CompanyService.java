@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyService {
-    private static final String SELECT_BY_ID = "SELECT company_id, name, country FROM companies " +
-            "WHERE company_id = ?";
     private static final String UPDATE_COMPANY = "UPDATE companies SET name = ?, country = ? WHERE company_id = ?";
     CompanyConverter companyConverter = new CompanyConverter();
     HibernateProvider provider;
@@ -28,6 +26,7 @@ public class CompanyService {
             final Transaction transaction = session.beginTransaction();
             List<CompanyDao> list = session.createQuery("FROM CompanyDao ORDER BY companyId", CompanyDao.class)
                     .list();
+
             return companyConverter.fromList(list);
 
         } catch (Exception e) {
@@ -37,24 +36,21 @@ public class CompanyService {
         return new ArrayList<>();
     }
 
-    public CompanyDto companyById(Integer id) throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
-//            statement.setInt(1, id);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        CompanyDao company = new CompanyDao();
-//        while (resultSet.next()) {
-//            company = new CompanyDao(resultSet.getInt("company_id"),
-//                    resultSet.getString("name"), resultSet.getString("country"));
-//        }
+    public CompanyDto companyById(Integer id) {
 
-        return null;//companyConverter.from(company);
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            CompanyDao company = session.createQuery("FROM CompanyDao WHERE companyId = :id", CompanyDao.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+
+            return companyConverter.from(company);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new CompanyDto();
     }
 
     public void updateCompany(String name, String country, Integer id) {
