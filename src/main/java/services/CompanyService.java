@@ -7,19 +7,14 @@ import model.dto.CompanyDto;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyService {
     private static final String DELETE_COMPANY = "DELETE FROM companies where company_id = ?";
-    private static final String SELECT = "SELECT company_id, name, country FROM companies order by 1";
     private static final String SELECT_BY_ID = "SELECT company_id, name, country FROM companies " +
             "WHERE company_id = ?";
-    private static final String INSERT_COMPANY = "INSERT INTO companies (company_id, name, country) VALUES (?, ?, ?)";
     private static final String UPDATE_COMPANY = "UPDATE companies SET name = ?, country = ? WHERE company_id = ?";
     CompanyConverter companyConverter = new CompanyConverter();
     HibernateProvider provider;
@@ -89,16 +84,17 @@ public class CompanyService {
     }
 
     public void createCompany(Integer companyId, String name, String country) {
+        CompanyDao company = new CompanyDao();
+        company.setCompanyId(companyId);
+        company.setName(name);
+        company.setCountry(country);
 
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(INSERT_COMPANY);
-//            statement.setInt(1, companyId);
-//            statement.setString(2, name);
-//            statement.setString(3, country);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.persist(company);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
