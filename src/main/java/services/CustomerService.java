@@ -1,51 +1,43 @@
 package services;
 
+import config.HibernateProvider;
 import converter.CustomerConverter;
 import model.dao.CustomerDao;
 import model.dto.CustomerDto;
+import org.hibernate.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
-//    private static final String DELETE_CUSTOMER = "DELETE FROM customers where customer_id = ?";
-//    private static final String SELECT = "SELECT customer_id, name, country FROM customers order by 1";
-//    private static final String SELECT_BY_ID = "SELECT customer_id, name, country FROM customers WHERE customer_id = ?";
-//    private static final String INSERT = "INSERT INTO customers (customer_id, name, country) VALUES (?, ?, ?)";
-//    private static final String UPDATE_CUSTOMER = "UPDATE customers SET name = ?, country = ? WHERE customer_id = ?";
-//    CustomerConverter customerConverter = new CustomerConverter();
-//    DatabaseManagerConnector connector;
-//
-//    public CustomerService(DatabaseManagerConnector connector) {
-//        this.connector = connector;
-//    }
-//
-//    public List<CustomerDto> customerList() throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SELECT);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        List<CustomerDao> list = new ArrayList<>();
-//        while (resultSet.next()) {
-//            CustomerDao customer = new CustomerDao(resultSet.getInt("customer_id"),
-//                    resultSet.getString("name"), resultSet.getString("country"));
-//
-//            list.add(customer);
-//        }
-//
-//        return customerConverter.fromList(list);
-//    }
-//
-//    public CustomerDto customerById(Integer id) throws SQLException {
+    private static final String DELETE_CUSTOMER = "DELETE FROM customers where customer_id = ?";
+    private static final String SELECT_BY_ID = "SELECT customer_id, name, country FROM customers WHERE customer_id = ?";
+    private static final String INSERT = "INSERT INTO customers (customer_id, name, country) VALUES (?, ?, ?)";
+    private static final String UPDATE_CUSTOMER = "UPDATE customers SET name = ?, country = ? WHERE customer_id = ?";
+    CustomerConverter customerConverter = new CustomerConverter();
+    private final HibernateProvider provider;
+
+    public CustomerService(HibernateProvider provider) {
+        this.provider = provider;
+    }
+
+    public List<CustomerDto> customerList() throws SQLException {
+
+        try (final Session session = provider.openSession()) {
+            List<CustomerDao> list = session.createQuery("FROM Customer ORDER BY customerId", CustomerDao.class)
+                    .list();
+
+            return customerConverter.fromList(list);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+    public CustomerDto customerById(Integer id) throws SQLException {
 //        ResultSet resultSet = null;
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
@@ -62,10 +54,10 @@ public class CustomerService {
 //                    resultSet.getString("name"), resultSet.getString("country"));
 //        }
 //
-//        return customerConverter.from(customer);
-//    }
-//
-//    public void updateCustomer(String name, String country, Integer id) {
+        return null;//customerConverter.from(customer);
+    }
+
+    public void updateCustomer(String name, String country, Integer id) {
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(UPDATE_CUSTOMER);
 //            statement.setString(1, name);
@@ -76,10 +68,10 @@ public class CustomerService {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
-//
-//    public void deleteCustomer(Integer id) {
-//
+    }
+
+    public void deleteCustomer(Integer id) {
+
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(DELETE_CUSTOMER);
 //            statement.setInt(1, id);
@@ -88,10 +80,10 @@ public class CustomerService {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
-//
-//    public void createCustomer(Integer customerId, String name, String country) {
-//
+    }
+
+    public void createCustomer(Integer customerId, String name, String country) {
+
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(INSERT);
 //            statement.setInt(1, customerId);
@@ -102,5 +94,5 @@ public class CustomerService {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
+    }
 }

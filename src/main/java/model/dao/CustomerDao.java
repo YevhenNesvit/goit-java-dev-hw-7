@@ -1,20 +1,21 @@
 package model.dao;
 
+import jakarta.persistence.*;
+
+@Entity(name = "Customer")
+@Table(name = "customers")
 public class CustomerDao {
     private Integer customerId;
     private String name;
     private String country;
 
-    public CustomerDao(Integer customerId, String name, String country) {
-        this.customerId = customerId;
-        this.name = name;
-        this.country = country;
-    }
 
     public CustomerDao() {
 
     }
 
+    @Id
+    @Column(name = "customer_id")
     public Integer getCustomerId() {
         return customerId;
     }
@@ -23,6 +24,7 @@ public class CustomerDao {
         this.customerId = customerId;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -31,6 +33,7 @@ public class CustomerDao {
         this.name = name;
     }
 
+    @Column(name = "country")
     public String getCountry() {
         return country;
     }

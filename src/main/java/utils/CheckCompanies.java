@@ -6,7 +6,7 @@ import services.CompanyService;
 import java.sql.SQLException;
 
 public class CheckCompanies {
-    HibernateProvider provider = new HibernateProvider();
+    private final HibernateProvider provider = new HibernateProvider();
     CompanyService companyService = new CompanyService(provider);
 
     public boolean IsCompanyIdExists(Integer id) throws SQLException {

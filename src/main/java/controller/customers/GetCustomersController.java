@@ -1,5 +1,6 @@
 package controller.customers;
 
+import config.HibernateProvider;
 import model.dto.CustomerDto;
 import services.CustomerService;
 
@@ -14,24 +15,24 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getCustomers")
 public class GetCustomersController extends HttpServlet {
-//    CustomerService customerService;
-//
-//    @Override
-//    public void init() {
-//        ServiceConnection connection = new ServiceConnection();
-//        customerService = new CustomerService(connection.connect());
-//    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-//            throws ServletException, IOException {
-//
-//        try {
-//            List<CustomerDto> customers = customerService.customerList();
-//            req.setAttribute("customers", customers);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        req.getRequestDispatcher("/WEB-INF/view/customers/getCustomers.jsp").forward(req, resp);
-//    }
+    CustomerService customerService;
+
+    @Override
+    public void init() {
+        HibernateProvider provider = new HibernateProvider();
+        customerService = new CustomerService(provider);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        try {
+            List<CustomerDto> customers = customerService.customerList();
+            req.setAttribute("customers", customers);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        req.getRequestDispatcher("/WEB-INF/view/customers/getCustomers.jsp").forward(req, resp);
+    }
 }
