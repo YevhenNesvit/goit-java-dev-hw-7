@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyService {
-    private static final String UPDATE_COMPANY = "UPDATE companies SET name = ?, country = ? WHERE company_id = ?";
     CompanyConverter companyConverter = new CompanyConverter();
     HibernateProvider provider;
 
@@ -54,16 +53,18 @@ public class CompanyService {
     }
 
     public void updateCompany(String name, String country, Integer id) {
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(UPDATE_COMPANY);
-//            statement.setString(1, name);
-//            statement.setString(2, country);
-//            statement.setInt(3, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        CompanyDao company = new CompanyDao();
+        company.setCompanyId(id);
+        company.setName(name);
+        company.setCountry(country);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.update(company);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteCompany(Integer id) {
@@ -78,9 +79,9 @@ public class CompanyService {
         }
     }
 
-    public void createCompany(Integer companyId, String name, String country) {
+    public void createCompany(Integer id, String name, String country) {
         CompanyDao company = new CompanyDao();
-        company.setCompanyId(companyId);
+        company.setCompanyId(id);
         company.setName(name);
         company.setCountry(country);
 
