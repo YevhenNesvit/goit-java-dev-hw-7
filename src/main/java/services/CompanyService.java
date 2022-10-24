@@ -22,7 +22,7 @@ public class CompanyService {
     public List<CompanyDto> companiesList() throws SQLException {
 
         try (final Session session = provider.openSession()) {
-            List<CompanyDao> list = session.createQuery("FROM CompanyDao ORDER BY companyId", CompanyDao.class)
+            List<CompanyDao> list = session.createQuery("FROM Company ORDER BY companyId", CompanyDao.class)
                     .list();
 
             return companyConverter.fromList(list);
@@ -37,7 +37,7 @@ public class CompanyService {
     public CompanyDto companyById(Integer id) {
 
         try (final Session session = provider.openSession()) {
-            CompanyDao company = session.createQuery("FROM CompanyDao WHERE companyId = :id", CompanyDao.class)
+            CompanyDao company = session.createQuery("FROM Company WHERE companyId = :id", CompanyDao.class)
                     .setParameter("id", id)
                     .getSingleResult();
 
@@ -58,7 +58,7 @@ public class CompanyService {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
-            session.update(company);
+            session.merge(company);
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class CompanyService {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
-            session.delete(company);
+            session.remove(company);
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();

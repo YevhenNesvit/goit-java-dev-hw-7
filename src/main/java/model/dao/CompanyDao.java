@@ -2,7 +2,7 @@ package model.dao;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "Company")
 @Table(name = "companies")
 public class CompanyDao {
     Integer companyId;
