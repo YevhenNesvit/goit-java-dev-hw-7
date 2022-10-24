@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyService {
-    private static final String DELETE_COMPANY = "DELETE FROM companies where company_id = ?";
     private static final String SELECT_BY_ID = "SELECT company_id, name, country FROM companies " +
             "WHERE company_id = ?";
     private static final String UPDATE_COMPANY = "UPDATE companies SET name = ?, country = ? WHERE company_id = ?";
@@ -27,7 +26,7 @@ public class CompanyService {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
-            List<CompanyDao> list = session.createQuery("FROM CompanyDao cd ORDER BY cd.companyId", CompanyDao.class)
+            List<CompanyDao> list = session.createQuery("FROM CompanyDao ORDER BY companyId", CompanyDao.class)
                     .list();
             return companyConverter.fromList(list);
 
@@ -73,14 +72,14 @@ public class CompanyService {
 
     public void deleteCompany(Integer id) {
 
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(DELETE_COMPANY);
-//            statement.setInt(1, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.createQuery("DELETE FROM CompanyDao WHERE companyId = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void createCompany(Integer companyId, String name, String country) {
