@@ -5,6 +5,7 @@ import converter.DeveloperConverter;
 import model.dao.DeveloperDao;
 import model.dto.DeveloperDto;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -34,9 +35,6 @@ public class DeveloperService {
             "JOIN skills s ON s.skill_id = ds.skill_id " +
             "WHERE s.skill_level = ? " +
             "ORDER BY 1";
-    private static final String DELETE_DEVELOPER = "DELETE FROM developers where developer_id = ?";
-    private static final String INSERT = "INSERT INTO developers (developer_id, first_name, last_name, gender, " +
-            "age, company_id, salary) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String SELECT_BY_ID = "SELECT developer_id, first_name, last_name, gender, age, company_id, salary " +
             "FROM developers " +
             "WHERE developer_id = ?";
@@ -194,35 +192,37 @@ public class DeveloperService {
 //            e.printStackTrace();
 //        }
 //    }
-//
-//    public void deleteDeveloper(Integer id) {
-//
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(DELETE_DEVELOPER);
-//            statement.setInt(1, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void createDeveloper(Integer developerId, String firstName, String lastName, String gender, Integer age,
-//                                Integer companyId, Integer salary) {
-//
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(INSERT);
-//            statement.setInt(1, developerId);
-//            statement.setString(2, firstName);
-//            statement.setString(3, lastName);
-//            statement.setString(4, gender);
-//            statement.setInt(5, age);
-//            statement.setInt(6, companyId);
-//            statement.setInt(7, salary);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    public void deleteDeveloper(Integer id) {
+        DeveloperDao developer = new DeveloperDao();
+        developer.setDeveloperId(id);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.remove(developer);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createDeveloper(Integer id, String firstName, String lastName, String gender, Integer age,
+                                Integer companyId, Integer salary) {
+        DeveloperDao developer = new DeveloperDao();
+        developer.setDeveloperId(id);
+        developer.setFirstName(firstName);
+        developer.setLastName(lastName);
+        developer.setGender(gender);
+        developer.setAge(age);
+        developer.setCompanyId(companyId);
+        developer.setSalary(salary);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.persist(developer);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
