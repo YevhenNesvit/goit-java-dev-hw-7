@@ -1,5 +1,6 @@
 package controller.skills;
 
+import config.HibernateProvider;
 import model.dto.SkillDto;
 import services.SkillService;
 
@@ -14,23 +15,23 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getSkills")
 public class GetSkillsController extends HttpServlet {
-//    SkillService skillService;
-//
-//    @Override
-//    public void init() {
-//        ServiceConnection connection = new ServiceConnection();
-//        skillService = new SkillService(connection.connect());
-//    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//
-//        try {
-//            List<SkillDto> skills = skillService.skillsList();
-//            req.setAttribute("skills", skills);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        req.getRequestDispatcher("/WEB-INF/view/skills/getSkills.jsp").forward(req, resp);
-//    }
+    SkillService skillService;
+
+    @Override
+    public void init() {
+        HibernateProvider provider = new HibernateProvider();
+        skillService = new SkillService(provider);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        try {
+            List<SkillDto> skills = skillService.skillsList();
+            req.setAttribute("skills", skills);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        req.getRequestDispatcher("/WEB-INF/view/skills/getSkills.jsp").forward(req, resp);
+    }
 }

@@ -1,51 +1,43 @@
 package services;
 
+import config.HibernateProvider;
 import converter.SkillConverter;
 import model.dao.SkillDao;
 import model.dto.SkillDto;
+import org.hibernate.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SkillService {
-//    private static final String DELETE_SKILL = "DELETE FROM skills where skill_id = ?";
-//    private static final String SELECT = "SELECT skill_id, name, skill_level FROM skills order by 1";
-//    private static final String SELECT_BY_ID = "SELECT skill_id, name, skill_level FROM skills WHERE skill_id = ?";
-//    private static final String INSERT = "INSERT INTO skills (skill_id, name, skill_level) VALUES (?, ?, ?)";
-//    private static final String UPDATE_SKILL = "UPDATE skills SET name = ?, skill_level = ? WHERE skill_id = ?";
-//    SkillConverter skillConverter = new SkillConverter();
-//    DatabaseManagerConnector connector;
-//
-//    public SkillService(DatabaseManagerConnector connector) {
-//        this.connector = connector;
-//    }
-//
-//    public List<SkillDto> skillsList() throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SELECT);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        List<SkillDao> list = new ArrayList<>();
-//        while (resultSet.next()) {
-//            SkillDao skill = new SkillDao(resultSet.getInt("skill_id"),
-//                    resultSet.getString("name"), resultSet.getString("skill_level"));
-//
-//            list.add(skill);
-//        }
-//
-//        return skillConverter.fromList(list);
-//    }
-//
-//    public SkillDto skillById(Integer id) throws SQLException {
+    private static final String DELETE_SKILL = "DELETE FROM skills where skill_id = ?";
+    private static final String SELECT_BY_ID = "SELECT skill_id, name, skill_level FROM skills WHERE skill_id = ?";
+    private static final String INSERT = "INSERT INTO skills (skill_id, name, skill_level) VALUES (?, ?, ?)";
+    private static final String UPDATE_SKILL = "UPDATE skills SET name = ?, skill_level = ? WHERE skill_id = ?";
+    SkillConverter skillConverter = new SkillConverter();
+    private final HibernateProvider provider;
+
+    public SkillService(HibernateProvider provider) {
+        this.provider = provider;
+    }
+
+    public List<SkillDto> skillsList() throws SQLException {
+
+        try (final Session session = provider.openSession()) {
+            List<SkillDao> list = session.createQuery("FROM Skill ORDER BY skillId", SkillDao.class)
+                    .list();
+
+            return skillConverter.fromList(list);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
+
+    public SkillDto skillById(Integer id) throws SQLException {
 //        ResultSet resultSet = null;
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
@@ -61,11 +53,11 @@ public class SkillService {
 //            skill = new SkillDao(resultSet.getInt("skill_id"),
 //                    resultSet.getString("name"), resultSet.getString("skill_level"));
 //        }
-//
-//        return skillConverter.from(skill);
-//    }
-//
-//    public void updateSkill(String name, String skillLevel, Integer id) {
+
+        return null;//skillConverter.from(skill);
+    }
+
+    public void updateSkill(String name, String skillLevel, Integer id) {
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(UPDATE_SKILL);
 //            statement.setString(1, name);
@@ -76,10 +68,10 @@ public class SkillService {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
-//
-//    public void deleteSkill(Integer id) {
-//
+    }
+
+    public void deleteSkill(Integer id) {
+
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(DELETE_SKILL);
 //            statement.setInt(1, id);
@@ -88,10 +80,10 @@ public class SkillService {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
-//
-//    public void createSkill(Integer skillId, String name, String skillLevel) {
-//
+    }
+
+    public void createSkill(Integer skillId, String name, String skillLevel) {
+
 //        try (Connection connection = connector.getConnection()) {
 //            PreparedStatement statement = connection.prepareStatement(INSERT);
 //            statement.setInt(1, skillId);
@@ -102,5 +94,5 @@ public class SkillService {
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-//    }
+    }
 }
