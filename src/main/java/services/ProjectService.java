@@ -5,6 +5,7 @@ import converter.ProjectConverter;
 import model.dao.ProjectDao;
 import model.dto.ProjectDto;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,9 +15,6 @@ import java.util.List;
 public class ProjectService {
     private static final String SELECT_BY_ID = "SELECT project_id, name, customer_id, company_id, cost, creation_date " +
             "FROM projects WHERE project_id = ?";
-    private static final String DELETE_PROJECT = "DELETE FROM projects where project_id = ?";
-    private static final String INSERT = "INSERT INTO projects (project_id, name, customer_id, company_id, cost, " +
-            "creation_date) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_PROJECT = "UPDATE projects SET name = ?, customer_id = ?, company_id = ?, cost = ?," +
             "creation_date = ? WHERE project_id = ?";
     ProjectConverter projectConverter = new ProjectConverter();
@@ -77,34 +75,38 @@ public class ProjectService {
 //            e.printStackTrace();
 //        }
 //    }
-//
-//    public void deleteProject(Integer id) {
-//
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(DELETE_PROJECT);
-//            statement.setInt(1, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void createProject(Integer projectId, String name, Integer customerId, Integer companyId, Integer cost,
-//                                Date creationDate) {
-//
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(INSERT);
-//            statement.setInt(1, projectId);
-//            statement.setString(2, name);
-//            statement.setInt(3, customerId);
-//            statement.setInt(4, companyId);
-//            statement.setInt(5, cost);
-//            statement.setDate(6, creationDate);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    public void deleteProject(Integer id) {
+
+        ProjectDao project = new ProjectDao();
+        project.setProjectId(id);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.remove(project);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createProject(Integer id, String name, Integer customerId, Integer companyId, Integer cost,
+                                Date creationDate) {
+
+        ProjectDao project = new ProjectDao();
+        project.setProjectId(id);
+        project.setName(name);
+        project.setCustomerId(customerId);
+        project.setCompanyId(companyId);
+        project.setCost(cost);
+        project.setCreationDate(creationDate);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.persist(project);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
