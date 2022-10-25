@@ -1,5 +1,6 @@
 package controller.developers;
 
+import config.HibernateProvider;
 import model.dto.DeveloperDto;
 import services.DeveloperService;
 
@@ -14,23 +15,23 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getDevelopers")
 public class GetDevelopersController extends HttpServlet {
-//    DeveloperService developerService;
-//
-//    @Override
-//    public void init() {
-//        ServiceConnection connection = new ServiceConnection();
-//        developerService = new DeveloperService(connection.connect());
-//    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//
-//        try {
-//            List<DeveloperDto> developers = developerService.developersList();
-//            req.setAttribute("developers", developers );
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        req.getRequestDispatcher("/WEB-INF/view/developers/getDevelopers.jsp").forward(req, resp);
-//    }
+    DeveloperService developerService;
+
+    @Override
+    public void init() {
+        HibernateProvider provider = new HibernateProvider();
+        developerService = new DeveloperService(provider);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        try {
+            List<DeveloperDto> developers = developerService.developersList();
+            req.setAttribute("developers", developers );
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        req.getRequestDispatcher("/WEB-INF/view/developers/getDevelopers.jsp").forward(req, resp);
+    }
 }

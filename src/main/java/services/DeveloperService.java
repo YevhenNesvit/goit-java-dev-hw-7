@@ -1,58 +1,55 @@
 package services;
 
+import config.HibernateProvider;
 import converter.DeveloperConverter;
 import model.dao.DeveloperDao;
 import model.dto.DeveloperDto;
+import org.hibernate.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 public class DeveloperService {
-//    private static final String SALARY_BY_PROJECT_ID = "SELECT SUM(d.salary) as salary " +
-//            "FROM developers d JOIN developers_per_projects dpp ON dpp.developer_id = d.developer_id " +
-//            "JOIN projects p ON p.project_id = dpp.project_id WHERE p.project_id = ?";
-//    private static final String DEVELOPERS_BY_PROJECT_ID = "SELECT d.developer_id, d.first_name, d.last_name, d.gender, " +
-//            "d.age, d.company_id, d.salary " +
-//            "FROM developers d " +
-//            "JOIN developers_per_projects dpp ON dpp.developer_id = d.developer_id " +
-//            "JOIN projects p ON p.project_id = dpp.project_id " +
-//            "WHERE p.project_id = ? " +
-//            "ORDER BY 1";
-//    private static final String DEVELOPERS_BY_SKILL_NAME = "SELECT d.developer_id, d.first_name, d.last_name, d.gender, " +
-//            "d.age, d.company_id, d.salary " +
-//            "FROM developers d " +
-//            "JOIN developers_skills ds ON ds.developer_id = d.developer_id " +
-//            "JOIN skills s ON s.skill_id = ds.skill_id " +
-//            "WHERE s.name = ? " +
-//            "ORDER BY 1";
-//    private static final String DEVELOPERS_BY_SKILL_LEVEL = "SELECT DISTINCT d.developer_id, d.first_name, d.last_name, " +
-//            "d.gender, d.age, d.company_id, d.salary " +
-//            "FROM developers d " +
-//            "JOIN developers_skills ds ON ds.developer_id = d.developer_id " +
-//            "JOIN skills s ON s.skill_id = ds.skill_id " +
-//            "WHERE s.skill_level = ? " +
-//            "ORDER BY 1";
-//    private static final String DELETE_DEVELOPER = "DELETE FROM developers where developer_id = ?";
-//    private static final String INSERT = "INSERT INTO developers (developer_id, first_name, last_name, gender, " +
-//            "age, company_id, salary) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//    private static final String SELECT = "SELECT developer_id, first_name, last_name, gender, age, company_id, salary " +
-//            "FROM developers ORDER BY 1";
-//    private static final String SELECT_BY_ID = "SELECT developer_id, first_name, last_name, gender, age, company_id, salary " +
-//            "FROM developers " +
-//            "WHERE developer_id = ?";
-//    private static final String UPDATE_DEVELOPER = "UPDATE developers SET first_name = ?, last_name = ?, gender = ?, age = ?, " +
-//            "company_id = ?, salary = ? " +
-//            "WHERE developer_id = ?";
-//    DeveloperConverter developerConverter = new DeveloperConverter();
-//    DatabaseManagerConnector connector;
-//
-//    public DeveloperService(DatabaseManagerConnector connector) {
-//        this.connector = connector;
-//    }
-//
+    private static final String SALARY_BY_PROJECT_ID = "SELECT SUM(d.salary) as salary " +
+            "FROM developers d JOIN developers_per_projects dpp ON dpp.developer_id = d.developer_id " +
+            "JOIN projects p ON p.project_id = dpp.project_id WHERE p.project_id = ?";
+    private static final String DEVELOPERS_BY_PROJECT_ID = "SELECT d.developer_id, d.first_name, d.last_name, d.gender, " +
+            "d.age, d.company_id, d.salary " +
+            "FROM developers d " +
+            "JOIN developers_per_projects dpp ON dpp.developer_id = d.developer_id " +
+            "JOIN projects p ON p.project_id = dpp.project_id " +
+            "WHERE p.project_id = ? " +
+            "ORDER BY 1";
+    private static final String DEVELOPERS_BY_SKILL_NAME = "SELECT d.developer_id, d.first_name, d.last_name, d.gender, " +
+            "d.age, d.company_id, d.salary " +
+            "FROM developers d " +
+            "JOIN developers_skills ds ON ds.developer_id = d.developer_id " +
+            "JOIN skills s ON s.skill_id = ds.skill_id " +
+            "WHERE s.name = ? " +
+            "ORDER BY 1";
+    private static final String DEVELOPERS_BY_SKILL_LEVEL = "SELECT DISTINCT d.developer_id, d.first_name, d.last_name, " +
+            "d.gender, d.age, d.company_id, d.salary " +
+            "FROM developers d " +
+            "JOIN developers_skills ds ON ds.developer_id = d.developer_id " +
+            "JOIN skills s ON s.skill_id = ds.skill_id " +
+            "WHERE s.skill_level = ? " +
+            "ORDER BY 1";
+    private static final String DELETE_DEVELOPER = "DELETE FROM developers where developer_id = ?";
+    private static final String INSERT = "INSERT INTO developers (developer_id, first_name, last_name, gender, " +
+            "age, company_id, salary) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String SELECT_BY_ID = "SELECT developer_id, first_name, last_name, gender, age, company_id, salary " +
+            "FROM developers " +
+            "WHERE developer_id = ?";
+    private static final String UPDATE_DEVELOPER = "UPDATE developers SET first_name = ?, last_name = ?, gender = ?, age = ?, " +
+            "company_id = ?, salary = ? " +
+            "WHERE developer_id = ?";
+    DeveloperConverter developerConverter = new DeveloperConverter();
+    private final HibernateProvider provider;
+
+    public DeveloperService(HibernateProvider provider) {
+        this.provider = provider;
+    }
+
 //    public DeveloperDto salaryByProjectId(Integer id) throws SQLException {
 //        ResultSet resultSet = null;
 //        try (Connection connection = connector.getConnection()) {
@@ -142,29 +139,21 @@ public class DeveloperService {
 //
 //        return developerConverter.fromList(list);
 //    }
-//
-//    public List<DeveloperDto> developersList() throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SELECT);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        List<DeveloperDao> list = new ArrayList<>();
-//        while (resultSet.next()) {
-//            DeveloperDao developer = new DeveloperDao(resultSet.getInt("developer_id"),
-//                    resultSet.getString("first_name"), resultSet.getString("last_name"),
-//                    resultSet.getString("gender"), resultSet.getInt("age"),
-//                    resultSet.getInt("company_id"), resultSet.getInt("salary"));
-//
-//            list.add(developer);
-//        }
-//
-//        return developerConverter.fromList(list);
-//    }
+
+    public List<DeveloperDto> developersList() throws SQLException {
+
+        try (final Session session = provider.openSession()) {
+            List<DeveloperDao> list = session.createQuery("FROM Developer ORDER BY developerId", DeveloperDao.class)
+                    .list();
+
+            return developerConverter.fromList(list);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
 //
 //    public DeveloperDto developerById(Integer id) throws SQLException {
 //        ResultSet resultSet = null;

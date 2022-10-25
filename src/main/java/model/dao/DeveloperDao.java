@@ -1,5 +1,9 @@
 package model.dao;
 
+import jakarta.persistence.*;
+
+@Entity(name = "Developer")
+@Table(name = "developers")
 public class DeveloperDao {
     private Integer developerId;
     private String firstName;
@@ -9,21 +13,12 @@ public class DeveloperDao {
     private Integer companyId;
     private Integer salary;
 
-    public DeveloperDao(Integer developerId, String firstName, String lastName, String gender, Integer age,
-                        Integer companyId, Integer salary) {
-        this.developerId = developerId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.age = age;
-        this.companyId = companyId;
-        this.salary = salary;
-    }
-
     public DeveloperDao() {
 
     }
 
+    @Id
+    @Column(name = "developer_id")
     public Integer getDeveloperId() {
         return developerId;
     }
@@ -32,6 +27,7 @@ public class DeveloperDao {
         this.developerId = developerId;
     }
 
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -40,6 +36,7 @@ public class DeveloperDao {
         this.firstName = firstName;
     }
 
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -48,6 +45,7 @@ public class DeveloperDao {
         this.lastName = lastName;
     }
 
+    @Column(name = "gender")
     public String getGender() {
         return gender;
     }
@@ -56,6 +54,7 @@ public class DeveloperDao {
         this.gender = gender;
     }
 
+    @Column(name = "age")
     public Integer getAge() {
         return age;
     }
@@ -64,6 +63,7 @@ public class DeveloperDao {
         this.age = age;
     }
 
+    @Column(name = "company_id")
     public Integer getCompanyId() {
         return companyId;
     }
@@ -72,6 +72,7 @@ public class DeveloperDao {
         this.companyId = companyId;
     }
 
+    @Column(name = "salary")
     public Integer getSalary() {
         return salary;
     }
