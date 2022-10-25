@@ -18,7 +18,7 @@
     <body>
         <c:import url="${contextPath}/WEB-INF/view/navigationBar.jsp"/>
         <div class="center">
-            <h1><b>Servlets</b></h1>
+            <h1><b>Hibernate</b></h1>
         </div>
     </body>
 </html>
