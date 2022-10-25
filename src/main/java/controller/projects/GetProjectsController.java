@@ -1,5 +1,6 @@
 package controller.projects;
 
+import config.HibernateProvider;
 import model.dto.ProjectDto;
 import services.ProjectService;
 
@@ -14,23 +15,23 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getProjects")
 public class GetProjectsController extends HttpServlet {
-//    ProjectService projectService;
-//
-//    @Override
-//    public void init() {
-//        ServiceConnection connection = new ServiceConnection();
-//        projectService = new ProjectService(connection.connect());
-//    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//
-//        try {
-//            List<ProjectDto> projects = projectService.projectsList();
-//            req.setAttribute("projects", projects);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        req.getRequestDispatcher("/WEB-INF/view/projects/getProjects.jsp").forward(req, resp);
-//    }
+    ProjectService projectService;
+
+    @Override
+    public void init() {
+        HibernateProvider provider = new HibernateProvider();
+        projectService = new ProjectService(provider);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        try {
+            List<ProjectDto> projects = projectService.projectsList();
+            req.setAttribute("projects", projects);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        req.getRequestDispatcher("/WEB-INF/view/projects/getProjects.jsp").forward(req, resp);
+    }
 }
