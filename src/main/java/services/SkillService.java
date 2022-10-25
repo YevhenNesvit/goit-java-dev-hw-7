@@ -66,7 +66,6 @@ public class SkillService {
     }
 
     public void deleteSkill(Integer id) {
-
         SkillDao skill = new SkillDao();
         skill.setSkillId(id);
 
@@ -80,7 +79,6 @@ public class SkillService {
     }
 
     public void createSkill(Integer id, String name, String skillLevel) {
-
         SkillDao skill = new SkillDao();
         skill.setSkillId(id);
         skill.setName(name);

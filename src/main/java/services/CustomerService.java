@@ -51,7 +51,6 @@ public class CustomerService {
     }
 
     public void updateCustomer(String name, String country, Integer id) {
-
         CustomerDao customer = new CustomerDao();
         customer.setCustomerId(id);
         customer.setName(name);

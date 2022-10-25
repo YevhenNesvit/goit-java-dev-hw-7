@@ -70,7 +70,6 @@ public class ProjectService {
     }
 
     public void deleteProject(Integer id) {
-
         ProjectDao project = new ProjectDao();
         project.setProjectId(id);
 
