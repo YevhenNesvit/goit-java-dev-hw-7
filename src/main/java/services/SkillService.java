@@ -5,15 +5,14 @@ import converter.SkillConverter;
 import model.dao.SkillDao;
 import model.dto.SkillDto;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SkillService {
-    private static final String DELETE_SKILL = "DELETE FROM skills where skill_id = ?";
     private static final String SELECT_BY_ID = "SELECT skill_id, name, skill_level FROM skills WHERE skill_id = ?";
-    private static final String INSERT = "INSERT INTO skills (skill_id, name, skill_level) VALUES (?, ?, ?)";
     private static final String UPDATE_SKILL = "UPDATE skills SET name = ?, skill_level = ? WHERE skill_id = ?";
     SkillConverter skillConverter = new SkillConverter();
     private final HibernateProvider provider;
@@ -72,27 +71,31 @@ public class SkillService {
 
     public void deleteSkill(Integer id) {
 
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(DELETE_SKILL);
-//            statement.setInt(1, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        SkillDao skill = new SkillDao();
+        skill.setSkillId(id);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.remove(skill);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void createSkill(Integer skillId, String name, String skillLevel) {
+    public void createSkill(Integer id, String name, String skillLevel) {
 
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(INSERT);
-//            statement.setInt(1, skillId);
-//            statement.setString(2, name);
-//            statement.setString(3, skillLevel);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        SkillDao skill = new SkillDao();
+        skill.setSkillId(id);
+        skill.setName(name);
+        skill.setSkillLevel(skillLevel);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.persist(skill);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
