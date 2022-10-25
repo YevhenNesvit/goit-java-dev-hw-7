@@ -1,5 +1,6 @@
 package controller.skills;
 
+import config.HibernateProvider;
 import model.dto.SkillDto;
 import services.SkillService;
 import utils.CheckSkills;
@@ -15,36 +16,36 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getSkillByIdForm")
 public class GetSkillByIdFormController extends HttpServlet {
-//    SkillService skillService;
-//
-//    @Override
-//    public void init() {
-//        ServiceConnection connection = new ServiceConnection();
-//        skillService = new SkillService(connection.connect());
-//    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//
-//        req.getRequestDispatcher("/WEB-INF/view/skills/getSkillByIdForm.jsp").forward(req, resp);
-//    }
-//
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        CheckSkills checkSkills = new CheckSkills();
-//
-//        try {
-//            List<SkillDto> skills = new ArrayList<>();
-//            Integer skillId = Integer.parseInt(req.getParameter("skillId"));
-//            if (checkSkills.IsSkillIdExists(skillId)) {
-//                skills.add(skillService.skillById(skillId));
-//                req.setAttribute("skills", skills);
-//                req.getRequestDispatcher("/WEB-INF/view/skills/skillById.jsp").forward(req, resp);
-//            } else {
-//                req.getRequestDispatcher("/WEB-INF/view/skills/skillIdNotExists.jsp").forward(req, resp);
-//            }
-//        } catch (Exception ex) {
-//            req.getRequestDispatcher("/WEB-INF/view/skills/invalidSkillIdFormat.jsp").forward(req, resp);
-//        }
-//    }
+    SkillService skillService;
+
+    @Override
+    public void init() {
+        HibernateProvider provider = new HibernateProvider();
+        skillService = new SkillService(provider);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        req.getRequestDispatcher("/WEB-INF/view/skills/getSkillByIdForm.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        CheckSkills checkSkills = new CheckSkills();
+
+        try {
+            List<SkillDto> skills = new ArrayList<>();
+            Integer skillId = Integer.parseInt(req.getParameter("skillId"));
+            if (checkSkills.IsSkillIdExists(skillId)) {
+                skills.add(skillService.skillById(skillId));
+                req.setAttribute("skills", skills);
+                req.getRequestDispatcher("/WEB-INF/view/skills/skillById.jsp").forward(req, resp);
+            } else {
+                req.getRequestDispatcher("/WEB-INF/view/skills/skillIdNotExists.jsp").forward(req, resp);
+            }
+        } catch (Exception ex) {
+            req.getRequestDispatcher("/WEB-INF/view/skills/invalidSkillIdFormat.jsp").forward(req, resp);
+        }
+    }
 }
