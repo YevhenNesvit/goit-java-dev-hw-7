@@ -50,7 +50,7 @@ public class CompanyService {
         return new CompanyDto();
     }
 
-    public void updateCompany(String name, String country, Integer id) {
+    public void updateCompany(Integer id, String name, String country) {
         CompanyDao company = new CompanyDao();
         company.setCompanyId(id);
         company.setName(name);

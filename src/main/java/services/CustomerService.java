@@ -50,7 +50,7 @@ public class CustomerService {
         return new CustomerDto();
     }
 
-    public void updateCustomer(String name, String country, Integer id) {
+    public void updateCustomer(Integer id, String name, String country) {
         CustomerDao customer = new CustomerDao();
         customer.setCustomerId(id);
         customer.setName(name);

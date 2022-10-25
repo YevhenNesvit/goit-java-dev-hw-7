@@ -35,12 +35,6 @@ public class DeveloperService {
             "JOIN skills s ON s.skill_id = ds.skill_id " +
             "WHERE s.skill_level = ? " +
             "ORDER BY 1";
-    private static final String SELECT_BY_ID = "SELECT developer_id, first_name, last_name, gender, age, company_id, salary " +
-            "FROM developers " +
-            "WHERE developer_id = ?";
-    private static final String UPDATE_DEVELOPER = "UPDATE developers SET first_name = ?, last_name = ?, gender = ?, age = ?, " +
-            "company_id = ?, salary = ? " +
-            "WHERE developer_id = ?";
     DeveloperConverter developerConverter = new DeveloperConverter();
     private final HibernateProvider provider;
 
@@ -152,46 +146,42 @@ public class DeveloperService {
 
         return new ArrayList<>();
     }
-//
-//    public DeveloperDto developerById(Integer id) throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SELECT_BY_ID);
-//            statement.setInt(1, id);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        DeveloperDao developer = new DeveloperDao();
-//        while (resultSet.next()) {
-//            developer = new DeveloperDao(resultSet.getInt("developer_id"),
-//                    resultSet.getString("first_name"), resultSet.getString("last_name"),
-//                    resultSet.getString("gender"), resultSet.getInt("age"),
-//                    resultSet.getInt("company_id"), resultSet.getInt("salary"));
-//        }
-//
-//        return developerConverter.from(developer);
-//    }
-//
-//    public void updateDeveloper(String firstName, String lastName, String gender, Integer age, Integer companyId,
-//                                Integer salary, Integer id) {
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(UPDATE_DEVELOPER);
-//            statement.setString(1, firstName);
-//            statement.setString(2, lastName);
-//            statement.setString(3, gender);
-//            statement.setInt(4, age);
-//            statement.setInt(5, companyId);
-//            statement.setInt(6, salary);
-//            statement.setInt(7, id);
-//
-//            statement.executeUpdate();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+
+    public DeveloperDto developerById(Integer id) throws SQLException {
+
+        try (final Session session = provider.openSession()) {
+            DeveloperDao developer = session.createQuery("FROM Developer WHERE developerId = :id", DeveloperDao.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+
+            return developerConverter.from(developer);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new DeveloperDto();
+    }
+
+    public void updateDeveloper(Integer id, String firstName, String lastName, String gender, Integer age, Integer companyId,
+                                Integer salary) {
+        DeveloperDao developer = new DeveloperDao();
+        developer.setDeveloperId(id);
+        developer.setFirstName(firstName);
+        developer.setLastName(lastName);
+        developer.setGender(gender);
+        developer.setAge(age);
+        developer.setCompanyId(companyId);
+        developer.setSalary(salary);
+
+        try (final Session session = provider.openSession()) {
+            final Transaction transaction = session.beginTransaction();
+            session.merge(developer);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void deleteDeveloper(Integer id) {
         DeveloperDao developer = new DeveloperDao();

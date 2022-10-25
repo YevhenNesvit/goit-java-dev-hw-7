@@ -35,7 +35,7 @@ public class UpdateSkillFormController extends HttpServlet {
             String name = req.getParameter("skillName");
             String skillLevel = req.getParameter("skillLevel");
             if (checkSkills.IsSkillIdExists(skillId)) {
-                skillService.updateSkill(name, skillLevel, skillId);
+                skillService.updateSkill(skillId, name, skillLevel);
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillUpdated.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillIdNotExists.jsp").forward(req, resp);

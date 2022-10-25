@@ -50,7 +50,7 @@ public class SkillService {
         return new SkillDto();
     }
 
-    public void updateSkill(String name, String skillLevel, Integer id) {
+    public void updateSkill(Integer id, String name, String skillLevel) {
         SkillDao skill = new SkillDao();
         skill.setSkillId(id);
         skill.setName(name);

@@ -35,7 +35,7 @@ public class UpdateCompanyFormController extends HttpServlet {
             String name = req.getParameter("companyName");
             String country = req.getParameter("country");
             if (checkCompanies.IsCompanyIdExists(companyId)) {
-                companyService.updateCompany(name, country, companyId);
+                companyService.updateCompany(companyId, name, country);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyUpdated.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

@@ -35,7 +35,7 @@ public class UpdateCustomerFormController extends HttpServlet {
             String name = req.getParameter("customerName");
             String country = req.getParameter("country");
             if (checkCustomers.IsCustomerIdExists(customerId)) {
-                customerService.updateCustomer(name, country, customerId);
+                customerService.updateCustomer(customerId, name, country);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerUpdated.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdNotExists.jsp").forward(req, resp);
