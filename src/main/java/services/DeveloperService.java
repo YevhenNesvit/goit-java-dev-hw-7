@@ -11,10 +11,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class DeveloperService {
-    private static final String SALARY_BY_PROJECT_ID = "SELECT SUM(d.salary) as salary " +
-            "FROM developers d JOIN developers_per_projects dpp ON dpp.developer_id = d.developer_id " +
-            "JOIN projects p ON p.project_id = dpp.project_id " +
-            "WHERE p.project_id = ?";
     DeveloperConverter developerConverter = new DeveloperConverter();
     private final HibernateProvider provider;
 
@@ -22,23 +18,24 @@ public class DeveloperService {
         this.provider = provider;
     }
 
-//    public DeveloperDto salaryByProjectId(Integer id) throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(SALARY_BY_PROJECT_ID);
-//            statement.setInt(1, id);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        DeveloperDao developer = new DeveloperDao();
-//        while (resultSet.next()) {
-//            developer.setSalary(resultSet.getInt("salary"));
-//        }
-//        return developerConverter.from(developer);
-//    }
+    public DeveloperDto salaryByProjectId(Integer id) {
+
+        try (final Session session = provider.openSession()) {
+            Long salary = session.createQuery("SELECT sum(salary) FROM Developer JOIN projects " +
+                            "WHERE projectId = :id", Long.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+            DeveloperDao developer = new DeveloperDao();
+            developer.setSalary(salary.intValue());
+
+            return developerConverter.from(developer);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new DeveloperDto();
+    }
 
     public List<DeveloperDto> developersByProjectId(Integer id) {
 
