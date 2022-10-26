@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 @Entity(name = "Company")
 @Table(name = "companies")
 public class CompanyDao {
-    Integer companyId;
-    String name;
-    String country;
+    private Integer companyId;
+    private String name;
+    private String country;
 
     public CompanyDao() {
 

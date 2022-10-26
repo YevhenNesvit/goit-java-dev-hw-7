@@ -21,13 +21,6 @@ public class DeveloperService {
             "JOIN projects p ON p.project_id = dpp.project_id " +
             "WHERE p.project_id = ? " +
             "ORDER BY 1";
-    private static final String DEVELOPERS_BY_SKILL_NAME = "SELECT d.developer_id, d.first_name, d.last_name, d.gender, " +
-            "d.age, d.company_id, d.salary " +
-            "FROM developers d " +
-            "JOIN developers_skills ds ON ds.developer_id = d.developer_id " +
-            "JOIN skills s ON s.skill_id = ds.skill_id " +
-            "WHERE s.name = ? " +
-            "ORDER BY 1";
     private static final String DEVELOPERS_BY_SKILL_LEVEL = "SELECT DISTINCT d.developer_id, d.first_name, d.last_name, " +
             "d.gender, d.age, d.company_id, d.salary " +
             "FROM developers d " +
@@ -83,30 +76,23 @@ public class DeveloperService {
 //
 //        return developerConverter.fromList(list);
 //    }
-//
-//    public List<DeveloperDto> developersBySkillName(String name) throws SQLException {
-//        ResultSet resultSet = null;
-//        try (Connection connection = connector.getConnection()) {
-//            PreparedStatement statement = connection.prepareStatement(DEVELOPERS_BY_SKILL_NAME);
-//            statement.setString(1, name);
-//
-//            resultSet = statement.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        List<DeveloperDao> list = new ArrayList<>();
-//        while (resultSet.next()) {
-//            DeveloperDao developer = new DeveloperDao(resultSet.getInt("developer_id"),
-//                    resultSet.getString("first_name"), resultSet.getString("last_name"),
-//                    resultSet.getString("gender"), resultSet.getInt("age"),
-//                    resultSet.getInt("company_id"), resultSet.getInt("salary"));
-//
-//            list.add(developer);
-//        }
-//
-//        return developerConverter.fromList(list);
-//    }
+
+    public List<DeveloperDto> developersBySkillName(String name) throws SQLException {
+
+        try (final Session session = provider.openSession()) {
+            List<DeveloperDao> developer = session.createQuery("FROM Developer d JOIN d.skills s WHERE s.name = " +
+                                    ":name ORDER BY developerId", DeveloperDao.class)
+                    .setParameter("name", name)
+                    .list();
+
+            return developerConverter.fromList(developer);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
 //
 //    public List<DeveloperDto> developersBySkillLevel(String level) throws SQLException {
 //        ResultSet resultSet = null;
@@ -147,7 +133,7 @@ public class DeveloperService {
         return new ArrayList<>();
     }
 
-    public DeveloperDto developerById(Integer id) throws SQLException {
+    public DeveloperDto developerById(Integer id) {
 
         try (final Session session = provider.openSession()) {
             DeveloperDao developer = session.createQuery("FROM Developer WHERE developerId = :id", DeveloperDao.class)

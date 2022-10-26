@@ -2,6 +2,8 @@ package model.dao;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity(name = "Developer")
 @Table(name = "developers")
 public class DeveloperDao {
@@ -12,6 +14,7 @@ public class DeveloperDao {
     private Integer age;
     private Integer companyId;
     private Integer salary;
+    private Set<SkillDao> skills;
 
     public DeveloperDao() {
 
@@ -79,5 +82,19 @@ public class DeveloperDao {
 
     public void setSalary(Integer salary) {
         this.salary = salary;
+    }
+
+    @ManyToMany
+    @JoinTable (
+            name = "developers_skills",
+            joinColumns = { @JoinColumn(name = "developer_id") },
+            inverseJoinColumns = { @JoinColumn(name = "skill_id") }
+    )
+    public Set<SkillDao> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<SkillDao> skills) {
+        this.skills = skills;
     }
 }

@@ -2,12 +2,15 @@ package model.dao;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity(name = "Skill")
 @Table(name = "skills")
 public class SkillDao {
-    Integer skillId;
-    String name;
-    String skillLevel;
+    private Integer skillId;
+    private String name;
+    private String skillLevel;
+    private Set<DeveloperDao> developers;
 
     public SkillDao() {
 
@@ -39,5 +42,14 @@ public class SkillDao {
 
     public void setSkillLevel(String skillLevel) {
         this.skillLevel = skillLevel;
+    }
+
+    @ManyToMany(mappedBy = "skills")
+    public Set<DeveloperDao> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(Set<DeveloperDao> developers) {
+        this.developers = developers;
     }
 }
