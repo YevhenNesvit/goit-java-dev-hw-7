@@ -3,6 +3,7 @@ package model.dao;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Entity(name = "Project")
 @Table(name = "projects")
@@ -13,6 +14,7 @@ public class ProjectDao {
     private Integer companyId;
     private Integer cost;
     private Date creationDate;
+    private Set<DeveloperDao> developers;
 
     public ProjectDao() {
     }
@@ -70,5 +72,14 @@ public class ProjectDao {
 
     public void setCreationDate(Date creation_date) {
         this.creationDate = creation_date;
+    }
+
+    @ManyToMany(mappedBy = "projects")
+    public Set<DeveloperDao> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(Set<DeveloperDao> developers) {
+        this.developers = developers;
     }
 }

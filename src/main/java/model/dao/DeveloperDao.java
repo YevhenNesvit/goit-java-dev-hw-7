@@ -15,6 +15,7 @@ public class DeveloperDao {
     private Integer companyId;
     private Integer salary;
     private Set<SkillDao> skills;
+    private Set<ProjectDao> projects;
 
     public DeveloperDao() {
 
@@ -96,5 +97,19 @@ public class DeveloperDao {
 
     public void setSkills(Set<SkillDao> skills) {
         this.skills = skills;
+    }
+
+    @ManyToMany
+    @JoinTable (
+            name = "developers_per_projects",
+            joinColumns = { @JoinColumn(name = "developer_id") },
+            inverseJoinColumns = { @JoinColumn(name = "project_id") }
+    )
+    public Set<ProjectDao> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectDao> projects) {
+        this.projects = projects;
     }
 }
