@@ -2,7 +2,7 @@ package controller.customers;
 
 import config.HibernateProvider;
 import model.dto.CustomerDto;
-import services.CustomerService;
+import repositories.CustomerRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getCustomers")
 public class GetCustomersController extends HttpServlet {
-    CustomerService customerService;
+    CustomerRepository customerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        customerService = new CustomerService(provider);
+        customerRepository = new CustomerRepository(provider);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class GetCustomersController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            List<CustomerDto> customers = customerService.customerList();
+            List<CustomerDto> customers = customerRepository.customerList();
             req.setAttribute("customers", customers);
         } catch (SQLException e) {
             e.printStackTrace();

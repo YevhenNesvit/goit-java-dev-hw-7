@@ -1,7 +1,7 @@
 package controller.developers;
 
 import config.HibernateProvider;
-import services.DeveloperService;
+import repositories.DeveloperRepository;
 import utils.CheckCompanies;
 import utils.CheckDevelopers;
 
@@ -14,12 +14,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/createDeveloperForm")
 public class CreateDeveloperFormController extends HttpServlet {
-    DeveloperService developerService;
+    DeveloperRepository developerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        developerService = new DeveloperService(provider);
+        developerRepository = new DeveloperRepository(provider);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CreateDeveloperFormController extends HttpServlet {
             if (checkDevelopers.IsDeveloperIdExists(developerId)) {
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerIdAlreadyExists.jsp").forward(req, resp);
             } else if (checkCompanies.IsCompanyIdExists(companyId)) {
-                developerService.createDeveloper(developerId, first_name, last_name, gender, age, companyId, salary);
+                developerRepository.createDeveloper(developerId, first_name, last_name, gender, age, companyId, salary);
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerCreated.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

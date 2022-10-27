@@ -1,7 +1,7 @@
 package controller.projects;
 
 import config.HibernateProvider;
-import services.ProjectService;
+import repositories.ProjectRepository;
 import utils.CheckCompanies;
 import utils.CheckCustomers;
 import utils.CheckProjects;
@@ -16,12 +16,12 @@ import java.sql.Date;
 
 @WebServlet(urlPatterns = "/createProjectForm")
 public class CreateProjectFormController extends HttpServlet {
-    ProjectService projectService;
+    ProjectRepository projectRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        projectService = new ProjectService(provider);
+        projectRepository = new ProjectRepository(provider);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CreateProjectFormController extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectIdAlreadyExists.jsp").forward(req, resp);
             } else if (checkCustomers.IsCustomerIdExists(customerId)) {
                 if (checkCompanies.IsCompanyIdExists(companyId)) {
-                    projectService.createProject(projectId, name, customerId, companyId, cost, creationDate);
+                    projectRepository.createProject(projectId, name, customerId, companyId, cost, creationDate);
                     req.getRequestDispatcher("/WEB-INF/view/projects/projectCreated.jsp").forward(req, resp);
                 } else {
                     req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

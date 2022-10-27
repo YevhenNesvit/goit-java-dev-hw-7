@@ -1,17 +1,17 @@
 package utils;
 
 import config.HibernateProvider;
-import services.CustomerService;
+import repositories.CustomerRepository;
 
 import java.sql.SQLException;
 
 public class CheckCustomers {
     private final HibernateProvider provider = new HibernateProvider();
-    CustomerService customerService = new CustomerService(provider);
+    CustomerRepository customerRepository = new CustomerRepository(provider);
 
     public boolean IsCustomerIdExists(Integer id) throws SQLException {
-        for (int i = 0; i < customerService.customerList().size(); i++) {
-            if(customerService.customerList().get(i).getCustomerId().equals(id)) {
+        for (int i = 0; i < customerRepository.customerList().size(); i++) {
+            if(customerRepository.customerList().get(i).getCustomerId().equals(id)) {
                 return true;
             }
         }

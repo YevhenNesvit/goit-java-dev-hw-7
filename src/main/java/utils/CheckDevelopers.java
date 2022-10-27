@@ -1,17 +1,17 @@
 package utils;
 
 import config.HibernateProvider;
-import services.DeveloperService;
+import repositories.DeveloperRepository;
 
 import java.sql.SQLException;
 
 public class CheckDevelopers {
     private final HibernateProvider provider = new HibernateProvider();
-    DeveloperService developerService = new DeveloperService(provider);
+    DeveloperRepository developerRepository = new DeveloperRepository(provider);
 
     public boolean IsDeveloperIdExists(Integer id) throws SQLException {
-        for (int i = 0; i < developerService.developersList().size(); i++) {
-            if(developerService.developersList().get(i).getDeveloperId().equals(id)) {
+        for (int i = 0; i < developerRepository.developersList().size(); i++) {
+            if(developerRepository.developersList().get(i).getDeveloperId().equals(id)) {
                 return true;
             }
         }

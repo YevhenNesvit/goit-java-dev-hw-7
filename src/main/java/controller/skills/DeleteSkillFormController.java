@@ -1,7 +1,7 @@
 package controller.skills;
 
 import config.HibernateProvider;
-import services.SkillService;
+import repositories.SkillRepository;
 import utils.CheckSkills;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/deleteSkillForm")
 public class DeleteSkillFormController extends HttpServlet {
-    SkillService skillService;
+    SkillRepository skillRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        skillService = new SkillService(provider);
+        skillRepository = new SkillRepository(provider);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeleteSkillFormController extends HttpServlet {
         try {
             Integer skillId = Integer.parseInt(req.getParameter("skillId"));
             if (checkSkills.IsSkillIdExists(skillId)) {
-                skillService.deleteSkill(skillId);
+                skillRepository.deleteSkill(skillId);
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillIdNotExists.jsp").forward(req, resp);

@@ -1,7 +1,7 @@
 package controller.projects;
 
 import config.HibernateProvider;
-import services.ProjectService;
+import repositories.ProjectRepository;
 import utils.CheckProjects;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/deleteProjectForm")
 public class DeleteProjectFormController extends HttpServlet {
-    ProjectService projectService;
+    ProjectRepository projectRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        projectService = new ProjectService(provider);
+        projectRepository = new ProjectRepository(provider);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeleteProjectFormController extends HttpServlet {
         try {
             Integer projectId = Integer.parseInt(req.getParameter("projectId"));
             if (checkProjects.IsProjectIdExists(projectId)) {
-                projectService.deleteProject(projectId);
+                projectRepository.deleteProject(projectId);
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectIdNotExists.jsp").forward(req, resp);

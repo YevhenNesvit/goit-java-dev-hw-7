@@ -2,7 +2,7 @@ package controller.companies;
 
 import config.HibernateProvider;
 import model.dto.CompanyDto;
-import services.CompanyService;
+import repositories.CompanyRepository;
 import utils.CheckCompanies;
 
 import javax.servlet.ServletException;
@@ -16,12 +16,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getCompanyByIdForm")
 public class GetCompanyByIdFormController extends HttpServlet {
-    CompanyService companyService;
+    CompanyRepository companyRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        companyService = new CompanyService(provider);
+        companyRepository = new CompanyRepository(provider);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GetCompanyByIdFormController extends HttpServlet {
             List<CompanyDto> companies = new ArrayList<>();
             Integer companyId = Integer.parseInt(req.getParameter("companyId"));
             if (checkCompanies.IsCompanyIdExists(companyId)) {
-                companies.add(companyService.companyById(companyId));
+                companies.add(companyRepository.companyById(companyId));
                 req.setAttribute("companies", companies);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyById.jsp").forward(req, resp);
             } else {

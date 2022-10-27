@@ -1,7 +1,7 @@
 package controller.developers;
 
 import config.HibernateProvider;
-import services.DeveloperService;
+import repositories.DeveloperRepository;
 import utils.CheckDevelopers;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/deleteDeveloperForm")
 public class DeleteDeveloperFormController extends HttpServlet {
-    DeveloperService developerService;
+    DeveloperRepository developerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        developerService = new DeveloperService(provider);
+        developerRepository = new DeveloperRepository(provider);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeleteDeveloperFormController extends HttpServlet {
         try {
             Integer developerId = Integer.parseInt(req.getParameter("developerId"));
             if (checkDevelopers.IsDeveloperIdExists(developerId)) {
-                developerService.deleteDeveloper(developerId);
+                developerRepository.deleteDeveloper(developerId);
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerIdNotExists.jsp").forward(req, resp);

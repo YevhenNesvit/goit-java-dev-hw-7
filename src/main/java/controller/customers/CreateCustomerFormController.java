@@ -1,7 +1,7 @@
 package controller.customers;
 
 import config.HibernateProvider;
-import services.CustomerService;
+import repositories.CustomerRepository;
 import utils.CheckCustomers;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/createCustomerForm")
 public class CreateCustomerFormController extends HttpServlet {
-    CustomerService customerService;
+    CustomerRepository customerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        customerService = new CustomerService(provider);
+        customerRepository = new CustomerRepository(provider);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CreateCustomerFormController extends HttpServlet {
             if (checkCustomers.IsCustomerIdExists(customerId)) {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdAlreadyExists.jsp").forward(req, resp);
             } else {
-                customerService.createCustomer(customerId, name, country);
+                customerRepository.createCustomer(customerId, name, country);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerCreated.jsp").forward(req, resp);
             }
         } catch (Exception ex) {

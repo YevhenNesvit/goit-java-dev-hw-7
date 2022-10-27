@@ -2,7 +2,7 @@ package controller.developers;
 
 import config.HibernateProvider;
 import model.dto.DeveloperDto;
-import services.DeveloperService;
+import repositories.DeveloperRepository;
 import utils.CheckDevelopers;
 
 import javax.servlet.ServletException;
@@ -16,12 +16,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getDeveloperByIdForm")
 public class GetDeveloperByIdFormController extends HttpServlet {
-    DeveloperService developerService;
+    DeveloperRepository developerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        developerService = new DeveloperService(provider);
+        developerRepository = new DeveloperRepository(provider);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GetDeveloperByIdFormController extends HttpServlet {
             List<DeveloperDto> developers = new ArrayList<>();
             Integer developerId = Integer.parseInt(req.getParameter("developerId"));
             if (checkDevelopers.IsDeveloperIdExists(developerId)) {
-                developers.add(developerService.developerById(developerId));
+                developers.add(developerRepository.developerById(developerId));
                 req.setAttribute("developers", developers);
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerById.jsp").forward(req, resp);
             } else {

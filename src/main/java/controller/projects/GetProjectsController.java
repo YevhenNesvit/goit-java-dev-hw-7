@@ -2,7 +2,7 @@ package controller.projects;
 
 import config.HibernateProvider;
 import model.dto.ProjectDto;
-import services.ProjectService;
+import repositories.ProjectRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,19 +15,19 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getProjects")
 public class GetProjectsController extends HttpServlet {
-    ProjectService projectService;
+    ProjectRepository projectRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        projectService = new ProjectService(provider);
+        projectRepository = new ProjectRepository(provider);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            List<ProjectDto> projects = projectService.projectsList();
+            List<ProjectDto> projects = projectRepository.projectsList();
             req.setAttribute("projects", projects);
         } catch (SQLException e) {
             e.printStackTrace();

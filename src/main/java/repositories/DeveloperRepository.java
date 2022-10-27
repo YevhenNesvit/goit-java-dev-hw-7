@@ -1,4 +1,4 @@
-package services;
+package repositories;
 
 import config.HibernateProvider;
 import converter.DeveloperConverter;
@@ -10,11 +10,11 @@ import org.hibernate.Transaction;
 import java.sql.SQLException;
 import java.util.*;
 
-public class DeveloperService {
+public class DeveloperRepository {
     DeveloperConverter developerConverter = new DeveloperConverter();
     private final HibernateProvider provider;
 
-    public DeveloperService(HibernateProvider provider) {
+    public DeveloperRepository(HibernateProvider provider) {
         this.provider = provider;
     }
 

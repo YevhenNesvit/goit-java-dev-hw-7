@@ -2,7 +2,7 @@ package controller.developers;
 
 import config.HibernateProvider;
 import model.dto.DeveloperDto;
-import services.DeveloperService;
+import repositories.DeveloperRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,19 +15,19 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getDevelopers")
 public class GetDevelopersController extends HttpServlet {
-    DeveloperService developerService;
+    DeveloperRepository developerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        developerService = new DeveloperService(provider);
+        developerRepository = new DeveloperRepository(provider);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            List<DeveloperDto> developers = developerService.developersList();
+            List<DeveloperDto> developers = developerRepository.developersList();
             req.setAttribute("developers", developers );
         } catch (SQLException e) {
             e.printStackTrace();

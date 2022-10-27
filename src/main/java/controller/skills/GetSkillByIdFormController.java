@@ -2,7 +2,7 @@ package controller.skills;
 
 import config.HibernateProvider;
 import model.dto.SkillDto;
-import services.SkillService;
+import repositories.SkillRepository;
 import utils.CheckSkills;
 
 import javax.servlet.ServletException;
@@ -16,12 +16,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getSkillByIdForm")
 public class GetSkillByIdFormController extends HttpServlet {
-    SkillService skillService;
+    SkillRepository skillRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        skillService = new SkillService(provider);
+        skillRepository = new SkillRepository(provider);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GetSkillByIdFormController extends HttpServlet {
             List<SkillDto> skills = new ArrayList<>();
             Integer skillId = Integer.parseInt(req.getParameter("skillId"));
             if (checkSkills.IsSkillIdExists(skillId)) {
-                skills.add(skillService.skillById(skillId));
+                skills.add(skillRepository.skillById(skillId));
                 req.setAttribute("skills", skills);
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillById.jsp").forward(req, resp);
             } else {

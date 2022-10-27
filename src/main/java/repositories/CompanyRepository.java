@@ -1,4 +1,4 @@
-package services;
+package repositories;
 
 import config.HibernateProvider;
 import converter.CompanyConverter;
@@ -11,11 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanyService {
+public class CompanyRepository {
     CompanyConverter companyConverter = new CompanyConverter();
     private final HibernateProvider provider;
 
-    public CompanyService(HibernateProvider provider) {
+    public CompanyRepository(HibernateProvider provider) {
         this.provider = provider;
     }
 

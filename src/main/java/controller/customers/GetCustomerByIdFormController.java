@@ -2,7 +2,7 @@ package controller.customers;
 
 import config.HibernateProvider;
 import model.dto.CustomerDto;
-import services.CustomerService;
+import repositories.CustomerRepository;
 import utils.CheckCustomers;
 
 import javax.servlet.ServletException;
@@ -16,12 +16,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getCustomerByIdForm")
 public class GetCustomerByIdFormController extends HttpServlet {
-    CustomerService customerService;
+    CustomerRepository customerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        customerService = new CustomerService(provider);
+        customerRepository = new CustomerRepository(provider);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GetCustomerByIdFormController extends HttpServlet {
             List<CustomerDto> customers = new ArrayList<>();
             Integer customerId = Integer.parseInt(req.getParameter("customerId"));
             if (checkCustomers.IsCustomerIdExists(customerId)) {
-                customers.add(customerService.customerById(customerId));
+                customers.add(customerRepository.customerById(customerId));
                 req.setAttribute("customers", customers);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerById.jsp").forward(req, resp);
             } else {

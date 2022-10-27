@@ -1,7 +1,7 @@
 package controller.skills;
 
 import config.HibernateProvider;
-import services.SkillService;
+import repositories.SkillRepository;
 import utils.CheckSkills;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/createSkillForm")
 public class CreateSkillFormController extends HttpServlet {
-    SkillService skillService;
+    SkillRepository skillRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        skillService = new SkillService(provider);
+        skillRepository = new SkillRepository(provider);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CreateSkillFormController extends HttpServlet {
             if (checkSkills.IsSkillIdExists(skillId)) {
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillIdAlreadyExists.jsp").forward(req, resp);
             } else {
-                skillService.createSkill(skillId, name, skillLevel);
+                skillRepository.createSkill(skillId, name, skillLevel);
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillCreated.jsp").forward(req, resp);
             }
         } catch (Exception ex) {

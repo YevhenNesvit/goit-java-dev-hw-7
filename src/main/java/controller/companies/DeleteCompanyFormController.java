@@ -1,7 +1,7 @@
 package controller.companies;
 
 import config.HibernateProvider;
-import services.CompanyService;
+import repositories.CompanyRepository;
 import utils.CheckCompanies;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/deleteCompanyForm")
 public class DeleteCompanyFormController extends HttpServlet {
-    CompanyService companyService;
+    CompanyRepository companyRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        companyService = new CompanyService(provider);
+        companyRepository = new CompanyRepository(provider);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeleteCompanyFormController extends HttpServlet {
         try {
             Integer companyId = Integer.parseInt(req.getParameter("companyId"));
             if (checkCompanies.IsCompanyIdExists(companyId)) {
-                companyService.deleteCompany(companyId);
+                companyRepository.deleteCompany(companyId);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

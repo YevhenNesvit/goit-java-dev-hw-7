@@ -1,7 +1,7 @@
 package controller.customers;
 
 import config.HibernateProvider;
-import services.CustomerService;
+import repositories.CustomerRepository;
 import utils.CheckCustomers;
 
 import javax.servlet.ServletException;
@@ -13,12 +13,12 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = "/deleteCustomerForm")
 public class DeleteCustomerFormController extends HttpServlet {
-    CustomerService customerService;
+    CustomerRepository customerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        customerService = new CustomerService(provider);
+        customerRepository = new CustomerRepository(provider);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeleteCustomerFormController extends HttpServlet {
         try {
             Integer customerId = Integer.parseInt(req.getParameter("customerId"));
             if (checkCustomers.IsCustomerIdExists(customerId)) {
-                customerService.deleteCustomer(customerId);
+                customerRepository.deleteCustomer(customerId);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdNotExists.jsp").forward(req, resp);

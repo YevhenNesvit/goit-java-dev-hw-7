@@ -2,7 +2,7 @@ package controller.developers;
 
 import config.HibernateProvider;
 import model.dto.DeveloperDto;
-import services.DeveloperService;
+import repositories.DeveloperRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getDevelopersBySkillNameForm")
 public class GetDevelopersBySkillNameFormController extends HttpServlet {
-    DeveloperService developerService;
+    DeveloperRepository developerRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        developerService = new DeveloperService(provider);
+        developerRepository = new DeveloperRepository(provider);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class GetDevelopersBySkillNameFormController extends HttpServlet {
 
         try {
             String skillName = req.getParameter("skillName");
-            List<DeveloperDto> developers = developerService.developersBySkillName(skillName);
+            List<DeveloperDto> developers = developerRepository.developersBySkillName(skillName);
             req.setAttribute("developers", developers);
             req.getRequestDispatcher("/WEB-INF/view/developers/developersBySkillLevel.jsp").forward(req, resp);
         } catch (SQLException e) {

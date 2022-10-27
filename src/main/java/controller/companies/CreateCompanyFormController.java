@@ -1,7 +1,7 @@
 package controller.companies;
 
 import config.HibernateProvider;
-import services.CompanyService;
+import repositories.CompanyRepository;
 import utils.CheckCompanies;
 
 import javax.servlet.ServletException;
@@ -14,12 +14,12 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/createCompanyForm")
 public class CreateCompanyFormController extends HttpServlet {
 
-    CompanyService companyService;
+    CompanyRepository companyRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        companyService = new CompanyService(provider);
+        companyRepository = new CompanyRepository(provider);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class CreateCompanyFormController extends HttpServlet {
             if (checkCompanies.IsCompanyIdExists(companyId)) {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdAlreadyExists.jsp").forward(req, resp);
             } else {
-                companyService.createCompany(companyId, name, country);
+                companyRepository.createCompany(companyId, name, country);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyCreated.jsp").forward(req, resp);
             }
         } catch (Exception ex) {

@@ -2,7 +2,7 @@ package controller.projects;
 
 import config.HibernateProvider;
 import model.dto.ProjectDto;
-import services.ProjectService;
+import repositories.ProjectRepository;
 import utils.CheckProjects;
 
 import javax.servlet.ServletException;
@@ -16,12 +16,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getProjectByIdForm")
 public class GetProjectByIdFormController extends HttpServlet {
-    ProjectService projectService;
+    ProjectRepository projectRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        projectService = new ProjectService(provider);
+        projectRepository = new ProjectRepository(provider);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GetProjectByIdFormController extends HttpServlet {
             List<ProjectDto> projects = new ArrayList<>();
             Integer projectId = Integer.parseInt(req.getParameter("projectId"));
             if (checkProjects.IsProjectIdExists(projectId)) {
-                projects.add(projectService.projectById(projectId));
+                projects.add(projectRepository.projectById(projectId));
                 req.setAttribute("projects", projects);
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectById.jsp").forward(req, resp);
             } else {

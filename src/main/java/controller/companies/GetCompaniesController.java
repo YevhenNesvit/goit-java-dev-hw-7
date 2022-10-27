@@ -2,7 +2,7 @@ package controller.companies;
 
 import config.HibernateProvider;
 import model.dto.CompanyDto;
-import services.CompanyService;
+import repositories.CompanyRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,12 +15,12 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getCompanies")
 public class GetCompaniesController extends HttpServlet {
-    CompanyService companyService;
+    CompanyRepository companyRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        companyService = new CompanyService(provider);
+        companyRepository = new CompanyRepository(provider);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class GetCompaniesController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            List<CompanyDto> companies = companyService.companiesList();
+            List<CompanyDto> companies = companyRepository.companiesList();
             req.setAttribute("companies", companies);
         } catch (SQLException e) {
             e.printStackTrace();

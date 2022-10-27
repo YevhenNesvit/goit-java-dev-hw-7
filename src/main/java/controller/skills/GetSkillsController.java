@@ -2,7 +2,7 @@ package controller.skills;
 
 import config.HibernateProvider;
 import model.dto.SkillDto;
-import services.SkillService;
+import repositories.SkillRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,19 +15,19 @@ import java.util.List;
 
 @WebServlet(urlPatterns = "/getSkills")
 public class GetSkillsController extends HttpServlet {
-    SkillService skillService;
+    SkillRepository skillRepository;
 
     @Override
     public void init() {
         HibernateProvider provider = new HibernateProvider();
-        skillService = new SkillService(provider);
+        skillRepository = new SkillRepository(provider);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            List<SkillDto> skills = skillService.skillsList();
+            List<SkillDto> skills = skillRepository.skillsList();
             req.setAttribute("skills", skills);
         } catch (SQLException e) {
             e.printStackTrace();

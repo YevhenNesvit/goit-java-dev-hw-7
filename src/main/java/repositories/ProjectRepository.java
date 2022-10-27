@@ -1,4 +1,4 @@
-package services;
+package repositories;
 
 import config.HibernateProvider;
 import converter.ProjectConverter;
@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 
-public class ProjectService {
+public class ProjectRepository {
     ProjectConverter projectConverter = new ProjectConverter();
     private final HibernateProvider provider;
 
-    public ProjectService(HibernateProvider provider) {
+    public ProjectRepository(HibernateProvider provider) {
         this.provider = provider;
     }
 

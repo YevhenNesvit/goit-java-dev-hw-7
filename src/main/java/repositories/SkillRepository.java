@@ -1,4 +1,4 @@
-package services;
+package repositories;
 
 import config.HibernateProvider;
 import converter.SkillConverter;
@@ -11,11 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkillService {
+public class SkillRepository {
     SkillConverter skillConverter = new SkillConverter();
     private final HibernateProvider provider;
 
-    public SkillService(HibernateProvider provider) {
+    public SkillRepository(HibernateProvider provider) {
         this.provider = provider;
     }
 
