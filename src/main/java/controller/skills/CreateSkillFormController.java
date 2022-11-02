@@ -1,6 +1,7 @@
 package controller.skills;
 
 import config.HibernateProvider;
+import model.dao.SkillDao;
 import repositories.SkillRepository;
 import utils.CheckSkills;
 
@@ -32,12 +33,14 @@ public class CreateSkillFormController extends HttpServlet {
 
         try {
             Integer skillId = Integer.parseInt(req.getParameter("skillId"));
-            String name = req.getParameter("skillName");
-            String skillLevel = req.getParameter("skillLevel");
+            SkillDao skill = new SkillDao();
+            skill.setSkillId(skillId);
+            skill.setName(req.getParameter("skillName"));
+            skill.setSkillLevel(req.getParameter("skillLevel"));
             if (checkSkills.IsSkillIdExists(skillId)) {
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillIdAlreadyExists.jsp").forward(req, resp);
             } else {
-                skillRepository.createSkill(skillId, name, skillLevel);
+                skillRepository.create(skill);
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillCreated.jsp").forward(req, resp);
             }
         } catch (Exception ex) {

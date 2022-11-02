@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkillRepository {
+public class SkillRepository implements Repository<SkillDto, List<SkillDto>, SkillDao> {
     SkillConverter skillConverter = new SkillConverter();
     private final HibernateProvider provider;
 
@@ -19,7 +19,8 @@ public class SkillRepository {
         this.provider = provider;
     }
 
-    public List<SkillDto> skillsList() throws SQLException {
+    @Override
+    public List<SkillDto> findAll() throws SQLException {
 
         try (final Session session = provider.openSession()) {
             List<SkillDao> list = session.createQuery("FROM Skill ORDER BY skillId", SkillDao.class)
@@ -34,7 +35,8 @@ public class SkillRepository {
         return new ArrayList<>();
     }
 
-    public SkillDto skillById(Integer id) {
+    @Override
+    public SkillDto findById(Integer id) {
 
         try (final Session session = provider.openSession()) {
             SkillDao skill = session.createQuery("FROM Skill WHERE skillId = :id", SkillDao.class)
@@ -50,11 +52,8 @@ public class SkillRepository {
         return new SkillDto();
     }
 
-    public void updateSkill(Integer id, String name, String skillLevel) {
-        SkillDao skill = new SkillDao();
-        skill.setSkillId(id);
-        skill.setName(name);
-        skill.setSkillLevel(skillLevel);
+    @Override
+    public void update(SkillDao skill) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
@@ -65,7 +64,8 @@ public class SkillRepository {
         }
     }
 
-    public void deleteSkill(Integer id) {
+    @Override
+    public void delete(Integer id) {
         SkillDao skill = new SkillDao();
         skill.setSkillId(id);
 
@@ -78,11 +78,8 @@ public class SkillRepository {
         }
     }
 
-    public void createSkill(Integer id, String name, String skillLevel) {
-        SkillDao skill = new SkillDao();
-        skill.setSkillId(id);
-        skill.setName(name);
-        skill.setSkillLevel(skillLevel);
+    @Override
+    public void create(SkillDao skill) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();

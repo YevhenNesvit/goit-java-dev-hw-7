@@ -10,8 +10,8 @@ public class CheckSkills {
     SkillRepository skillRepository = new SkillRepository(provider);
 
     public boolean IsSkillIdExists(Integer id) throws SQLException {
-        for (int i = 0; i < skillRepository.skillsList().size(); i++) {
-            if(skillRepository.skillsList().get(i).getSkillId().equals(id)) {
+        for (int i = 0; i < skillRepository.findAll().size(); i++) {
+            if(skillRepository.findAll().get(i).getSkillId().equals(id)) {
                 return true;
             }
         }

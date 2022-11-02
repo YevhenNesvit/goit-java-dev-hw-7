@@ -38,7 +38,7 @@ public class GetSkillByIdFormController extends HttpServlet {
             List<SkillDto> skills = new ArrayList<>();
             Integer skillId = Integer.parseInt(req.getParameter("skillId"));
             if (checkSkills.IsSkillIdExists(skillId)) {
-                skills.add(skillRepository.skillById(skillId));
+                skills.add(skillRepository.findById(skillId));
                 req.setAttribute("skills", skills);
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillById.jsp").forward(req, resp);
             } else {

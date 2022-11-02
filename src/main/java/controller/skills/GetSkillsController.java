@@ -27,7 +27,7 @@ public class GetSkillsController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            List<SkillDto> skills = skillRepository.skillsList();
+            List<SkillDto> skills = skillRepository.findAll();
             req.setAttribute("skills", skills);
         } catch (SQLException e) {
             e.printStackTrace();
