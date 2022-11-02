@@ -1,6 +1,7 @@
 package controller.customers;
 
 import config.HibernateProvider;
+import model.dao.CustomerDao;
 import repositories.CustomerRepository;
 import utils.CheckCustomers;
 
@@ -32,12 +33,14 @@ public class CreateCustomerFormController extends HttpServlet {
 
         try {
             Integer customerId = Integer.parseInt(req.getParameter("customerId"));
-            String name = req.getParameter("customerName");
-            String country = req.getParameter("country");
+            CustomerDao customer = new CustomerDao();
+            customer.setCustomerId(customerId);
+            customer.setName(req.getParameter("customerName"));
+            customer.setCountry(req.getParameter("country"));
             if (checkCustomers.IsCustomerIdExists(customerId)) {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdAlreadyExists.jsp").forward(req, resp);
             } else {
-                customerRepository.createCustomer(customerId, name, country);
+                customerRepository.create(customer);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerCreated.jsp").forward(req, resp);
             }
         } catch (Exception ex) {

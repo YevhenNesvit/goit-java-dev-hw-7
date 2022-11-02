@@ -10,8 +10,8 @@ public class CheckCustomers {
     CustomerRepository customerRepository = new CustomerRepository(provider);
 
     public boolean IsCustomerIdExists(Integer id) throws SQLException {
-        for (int i = 0; i < customerRepository.customerList().size(); i++) {
-            if(customerRepository.customerList().get(i).getCustomerId().equals(id)) {
+        for (int i = 0; i < customerRepository.findAll().size(); i++) {
+            if(customerRepository.findAll().get(i).getCustomerId().equals(id)) {
                 return true;
             }
         }

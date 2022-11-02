@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepository {
+public class CustomerRepository implements Repository<CustomerDto, List<CustomerDto>, CustomerDao> {
     CustomerConverter customerConverter = new CustomerConverter();
     private final HibernateProvider provider;
 
@@ -19,7 +19,7 @@ public class CustomerRepository {
         this.provider = provider;
     }
 
-    public List<CustomerDto> customerList() throws SQLException {
+    public List<CustomerDto> findAll() throws SQLException {
 
         try (final Session session = provider.openSession()) {
             List<CustomerDao> list = session.createQuery("FROM Customer ORDER BY customerId", CustomerDao.class)
@@ -34,7 +34,7 @@ public class CustomerRepository {
         return new ArrayList<>();
     }
 
-    public CustomerDto customerById(Integer id) {
+    public CustomerDto findById(Integer id) {
 
         try (final Session session = provider.openSession()) {
             CustomerDao customer = session.createQuery("FROM Customer WHERE customerId = :id", CustomerDao.class)
@@ -50,11 +50,7 @@ public class CustomerRepository {
         return new CustomerDto();
     }
 
-    public void updateCustomer(Integer id, String name, String country) {
-        CustomerDao customer = new CustomerDao();
-        customer.setCustomerId(id);
-        customer.setName(name);
-        customer.setCountry(country);
+    public void update(CustomerDao customer) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
@@ -65,7 +61,7 @@ public class CustomerRepository {
         }
     }
 
-    public void deleteCustomer(Integer id) {
+    public void delete(Integer id) {
         CustomerDao customer = new CustomerDao();
         customer.setCustomerId(id);
 
@@ -78,11 +74,7 @@ public class CustomerRepository {
         }
     }
 
-    public void createCustomer(Integer id, String name, String country) {
-        CustomerDao customer = new CustomerDao();
-        customer.setCustomerId(id);
-        customer.setName(name);
-        customer.setCountry(country);
+    public void create(CustomerDao customer) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();

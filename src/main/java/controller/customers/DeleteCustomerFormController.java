@@ -33,7 +33,7 @@ public class DeleteCustomerFormController extends HttpServlet {
         try {
             Integer customerId = Integer.parseInt(req.getParameter("customerId"));
             if (checkCustomers.IsCustomerIdExists(customerId)) {
-                customerRepository.deleteCustomer(customerId);
+                customerRepository.delete(customerId);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdNotExists.jsp").forward(req, resp);

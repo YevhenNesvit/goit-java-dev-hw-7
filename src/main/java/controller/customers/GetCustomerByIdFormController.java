@@ -38,7 +38,7 @@ public class GetCustomerByIdFormController extends HttpServlet {
             List<CustomerDto> customers = new ArrayList<>();
             Integer customerId = Integer.parseInt(req.getParameter("customerId"));
             if (checkCustomers.IsCustomerIdExists(customerId)) {
-                customers.add(customerRepository.customerById(customerId));
+                customers.add(customerRepository.findById(customerId));
                 req.setAttribute("customers", customers);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerById.jsp").forward(req, resp);
             } else {

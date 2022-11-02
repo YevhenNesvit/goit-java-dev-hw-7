@@ -1,6 +1,7 @@
 package controller.customers;
 
 import config.HibernateProvider;
+import model.dao.CustomerDao;
 import repositories.CustomerRepository;
 import utils.CheckCustomers;
 
@@ -32,10 +33,12 @@ public class UpdateCustomerFormController extends HttpServlet {
 
         try {
             Integer customerId = Integer.parseInt(req.getParameter("customerId"));
-            String name = req.getParameter("customerName");
-            String country = req.getParameter("country");
+            CustomerDao customer = new CustomerDao();
+            customer.setCustomerId(customerId);
+            customer.setName(req.getParameter("customerName"));
+            customer.setCountry(req.getParameter("country"));
             if (checkCustomers.IsCustomerIdExists(customerId)) {
-                customerRepository.updateCustomer(customerId, name, country);
+                customerRepository.update(customer);
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerUpdated.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdNotExists.jsp").forward(req, resp);
