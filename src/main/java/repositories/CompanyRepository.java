@@ -52,6 +52,7 @@ public class CompanyRepository implements Repository<CompanyDto, List<CompanyDto
         return new CompanyDto();
     }
 
+    @Override
     public void update(CompanyDao company) {
 
         try (final Session session = provider.openSession()) {
@@ -77,6 +78,7 @@ public class CompanyRepository implements Repository<CompanyDto, List<CompanyDto
         }
     }
 
+    @Override
     public void create(CompanyDao company) {
 
         try (final Session session = provider.openSession()) {
