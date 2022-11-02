@@ -1,6 +1,7 @@
 package controller.companies;
 
 import config.HibernateProvider;
+import model.dao.CompanyDao;
 import repositories.CompanyRepository;
 import utils.CheckCompanies;
 
@@ -32,10 +33,12 @@ public class UpdateCompanyFormController extends HttpServlet {
 
         try {
             Integer companyId = Integer.parseInt(req.getParameter("companyId"));
-            String name = req.getParameter("companyName");
-            String country = req.getParameter("country");
+            CompanyDao company = new CompanyDao();
+            company.setCompanyId(companyId);
+            company.setName(req.getParameter("companyName"));
+            company.setCountry(req.getParameter("country"));
             if (checkCompanies.IsCompanyIdExists(companyId)) {
-                companyRepository.updateCompany(companyId, name, country);
+                companyRepository.update(company);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyUpdated.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

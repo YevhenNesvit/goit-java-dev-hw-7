@@ -52,11 +52,7 @@ public class CompanyRepository implements Repository<CompanyDto, List<CompanyDto
         return new CompanyDto();
     }
 
-    public void updateCompany(Integer id, String name, String country) {
-        CompanyDao company = new CompanyDao();
-        company.setCompanyId(id);
-        company.setName(name);
-        company.setCountry(country);
+    public void update(CompanyDao company) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
