@@ -1,6 +1,7 @@
 package controller.companies;
 
 import config.HibernateProvider;
+import model.dao.CompanyDao;
 import repositories.CompanyRepository;
 import utils.CheckCompanies;
 
@@ -33,12 +34,14 @@ public class CreateCompanyFormController extends HttpServlet {
 
         try {
             Integer companyId = Integer.parseInt(req.getParameter("companyId"));
-            String name = req.getParameter("companyName");
-            String country = req.getParameter("country");
+            CompanyDao company = new CompanyDao();
+            company.setCompanyId(companyId);
+            company.setName(req.getParameter("companyName"));
+            company.setCountry(req.getParameter("country"));
             if (checkCompanies.IsCompanyIdExists(companyId)) {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdAlreadyExists.jsp").forward(req, resp);
             } else {
-                companyRepository.createCompany(companyId, name, country);
+                companyRepository.create(company);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyCreated.jsp").forward(req, resp);
             }
         } catch (Exception ex) {

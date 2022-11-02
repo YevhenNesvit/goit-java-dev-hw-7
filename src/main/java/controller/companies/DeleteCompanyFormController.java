@@ -33,7 +33,7 @@ public class DeleteCompanyFormController extends HttpServlet {
         try {
             Integer companyId = Integer.parseInt(req.getParameter("companyId"));
             if (checkCompanies.IsCompanyIdExists(companyId)) {
-                companyRepository.deleteCompany(companyId);
+                companyRepository.delete(companyId);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

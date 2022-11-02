@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanyRepository {
+public class CompanyRepository implements Repository<CompanyDto, List<CompanyDto>, CompanyDao> {
     CompanyConverter companyConverter = new CompanyConverter();
     private final HibernateProvider provider;
 
@@ -19,7 +19,8 @@ public class CompanyRepository {
         this.provider = provider;
     }
 
-    public List<CompanyDto> companiesList() throws SQLException {
+    @Override
+    public List<CompanyDto> findAll() throws SQLException {
 
         try (final Session session = provider.openSession()) {
             List<CompanyDao> list = session.createQuery("FROM Company ORDER BY companyId", CompanyDao.class)
@@ -34,7 +35,8 @@ public class CompanyRepository {
         return new ArrayList<>();
     }
 
-    public CompanyDto companyById(Integer id) {
+    @Override
+    public CompanyDto findById(Integer id) {
 
         try (final Session session = provider.openSession()) {
             CompanyDao company = session.createQuery("FROM Company WHERE companyId = :id", CompanyDao.class)
@@ -65,7 +67,8 @@ public class CompanyRepository {
         }
     }
 
-    public void deleteCompany(Integer id) {
+    @Override
+    public void delete(Integer id) {
         CompanyDao company = new CompanyDao();
         company.setCompanyId(id);
 
@@ -78,11 +81,7 @@ public class CompanyRepository {
         }
     }
 
-    public void createCompany(Integer id, String name, String country) {
-        CompanyDao company = new CompanyDao();
-        company.setCompanyId(id);
-        company.setName(name);
-        company.setCountry(country);
+    public void create(CompanyDao company) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();

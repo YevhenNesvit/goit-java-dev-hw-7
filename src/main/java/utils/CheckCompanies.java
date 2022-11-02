@@ -10,8 +10,8 @@ public class CheckCompanies {
     CompanyRepository companyRepository = new CompanyRepository(provider);
 
     public boolean IsCompanyIdExists(Integer id) throws SQLException {
-        for (int i = 0; i < companyRepository.companiesList().size(); i++) {
-            if(companyRepository.companiesList().get(i).getCompanyId().equals(id)) {
+        for (int i = 0; i < companyRepository.findAll().size(); i++) {
+            if(companyRepository.findAll().get(i).getCompanyId().equals(id)) {
                 return true;
             }
         }

@@ -38,7 +38,7 @@ public class GetCompanyByIdFormController extends HttpServlet {
             List<CompanyDto> companies = new ArrayList<>();
             Integer companyId = Integer.parseInt(req.getParameter("companyId"));
             if (checkCompanies.IsCompanyIdExists(companyId)) {
-                companies.add(companyRepository.companyById(companyId));
+                companies.add(companyRepository.findById(companyId));
                 req.setAttribute("companies", companies);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyById.jsp").forward(req, resp);
             } else {

@@ -28,7 +28,7 @@ public class GetCompaniesController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            List<CompanyDto> companies = companyRepository.companiesList();
+            List<CompanyDto> companies = companyRepository.findAll();
             req.setAttribute("companies", companies);
         } catch (SQLException e) {
             e.printStackTrace();
