@@ -10,6 +10,7 @@ public class ProjectDto {
     private Integer companyId;
     private Integer cost;
     private Date creationDate;
+    private Integer numberOfDevelopers;
 
     public ProjectDto() {
 
@@ -61,6 +62,14 @@ public class ProjectDto {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Integer getNumberOfDevelopers() {
+        return numberOfDevelopers;
+    }
+
+    public void setNumberOfDevelopers(Integer numberOfDevelopers) {
+        this.numberOfDevelopers = numberOfDevelopers;
     }
 
     @Override

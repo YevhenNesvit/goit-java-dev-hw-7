@@ -89,4 +89,23 @@ public class ProjectRepository implements Repository<ProjectDto, List<ProjectDto
             e.printStackTrace();
         }
     }
+
+    public List<ProjectDto> customizedProjectList() throws SQLException {
+
+        try (final Session session = provider.openSession()) {
+            List<ProjectDto> project = findAll();
+            for (int i = 0; i < project.size(); i++) {
+                List<Long> numberOfDevelopers = session.createQuery("SELECT count(developerId) as numberOfDevelopers FROM " +
+                                "Project JOIN developers GROUP BY projectId ORDER BY projectId", Long.class)
+                        .list();
+                project.get(i).setNumberOfDevelopers(numberOfDevelopers.get(i).intValue());
+            }
+            return project;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
+    }
 }
