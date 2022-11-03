@@ -38,7 +38,7 @@ public class GetProjectByIdFormController extends HttpServlet {
             List<ProjectDto> projects = new ArrayList<>();
             Integer projectId = Integer.parseInt(req.getParameter("projectId"));
             if (checkProjects.IsProjectIdExists(projectId)) {
-                projects.add(projectRepository.projectById(projectId));
+                projects.add(projectRepository.findById(projectId));
                 req.setAttribute("projects", projects);
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectById.jsp").forward(req, resp);
             } else {

@@ -9,10 +9,9 @@ import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 
-public class ProjectRepository {
+public class ProjectRepository implements Repository<ProjectDto, List<ProjectDto>, ProjectDao> {
     ProjectConverter projectConverter = new ProjectConverter();
     private final HibernateProvider provider;
 
@@ -20,7 +19,8 @@ public class ProjectRepository {
         this.provider = provider;
     }
 
-    public List<ProjectDto> projectsList() throws SQLException {
+    @Override
+    public List<ProjectDto> findAll() throws SQLException {
 
         try (final Session session = provider.openSession()) {
             List<ProjectDao> list = session.createQuery("FROM Project ORDER BY projectId", ProjectDao.class)
@@ -35,7 +35,8 @@ public class ProjectRepository {
         return new ArrayList<>();
     }
 
-    public ProjectDto projectById(Integer id) {
+    @Override
+    public ProjectDto findById(Integer id) {
 
         try (final Session session = provider.openSession()) {
             ProjectDao project = session.createQuery("FROM Project WHERE projectId = :id", ProjectDao.class)
@@ -51,14 +52,8 @@ public class ProjectRepository {
         return new ProjectDto();
     }
 
-    public void updateProject(Integer id, String name, Integer customerId, Integer companyId, Integer cost, Date creationDate) {
-        ProjectDao project = new ProjectDao();
-        project.setProjectId(id);
-        project.setName(name);
-        project.setCustomerId(customerId);
-        project.setCompanyId(companyId);
-        project.setCost(cost);
-        project.setCreationDate(creationDate);
+    @Override
+    public void update(ProjectDao project) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
@@ -69,7 +64,8 @@ public class ProjectRepository {
         }
     }
 
-    public void deleteProject(Integer id) {
+    @Override
+    public void delete(Integer id) {
         ProjectDao project = new ProjectDao();
         project.setProjectId(id);
 
@@ -82,15 +78,8 @@ public class ProjectRepository {
         }
     }
 
-    public void createProject(Integer id, String name, Integer customerId, Integer companyId, Integer cost,
-                                Date creationDate) {
-        ProjectDao project = new ProjectDao();
-        project.setProjectId(id);
-        project.setName(name);
-        project.setCustomerId(customerId);
-        project.setCompanyId(companyId);
-        project.setCost(cost);
-        project.setCreationDate(creationDate);
+    @Override
+    public void create(ProjectDao project) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();

@@ -1,6 +1,7 @@
 package controller.projects;
 
 import config.HibernateProvider;
+import model.dao.ProjectDao;
 import repositories.ProjectRepository;
 import utils.CheckCompanies;
 import utils.CheckCustomers;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Date;
 
 @WebServlet(urlPatterns = "/updateProjectForm")
 public class UpdateProjectFormController extends HttpServlet {
@@ -37,15 +37,17 @@ public class UpdateProjectFormController extends HttpServlet {
 
         try {
             Integer projectId = Integer.parseInt(req.getParameter("projectId"));
-            String name = req.getParameter("projectName");
-            Integer customerId = Integer.parseInt(req.getParameter("customerId"));
-            Integer companyId = Integer.parseInt(req.getParameter("companyId"));
-            Integer cost = Integer.parseInt(req.getParameter("cost"));
-            Date creationDate = java.sql.Date.valueOf(req.getParameter("creationDate"));
+            ProjectDao project = new ProjectDao();
+            project.setProjectId(projectId);
+            project.setName(req.getParameter("projectName"));
+            project.setCustomerId(Integer.parseInt(req.getParameter("customerId")));
+            project.setCompanyId(Integer.parseInt(req.getParameter("companyId")));
+            project.setCost(Integer.parseInt(req.getParameter("cost")));
+            project.setCreationDate(java.sql.Date.valueOf(req.getParameter("creationDate")));
             if (checkProjects.IsProjectIdExists(projectId)) {
-                if (checkCustomers.IsCustomerIdExists(customerId)) {
-                    if (checkCompanies.IsCompanyIdExists(companyId)) {
-                        projectRepository.updateProject(projectId, name, customerId, companyId, cost, creationDate);
+                if (checkCustomers.IsCustomerIdExists(project.getCustomerId())) {
+                    if (checkCompanies.IsCompanyIdExists(project.getCompanyId())) {
+                        projectRepository.update(project);
                         req.getRequestDispatcher("/WEB-INF/view/projects/projectUpdated.jsp").forward(req, resp);
                     } else {
                         req.getRequestDispatcher("/WEB-INF/view/companies/companyIdNotExists.jsp").forward(req, resp);

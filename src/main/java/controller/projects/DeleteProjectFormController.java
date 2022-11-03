@@ -33,7 +33,7 @@ public class DeleteProjectFormController extends HttpServlet {
         try {
             Integer projectId = Integer.parseInt(req.getParameter("projectId"));
             if (checkProjects.IsProjectIdExists(projectId)) {
-                projectRepository.deleteProject(projectId);
+                projectRepository.delete(projectId);
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/projects/projectIdNotExists.jsp").forward(req, resp);

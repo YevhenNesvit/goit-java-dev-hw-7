@@ -10,8 +10,8 @@ public class CheckProjects {
     ProjectRepository projectRepository = new ProjectRepository(provider);
 
     public boolean IsProjectIdExists(Integer id) throws SQLException {
-        for (int i = 0; i < projectRepository.projectsList().size(); i++) {
-            if(projectRepository.projectsList().get(i).getProjectId().equals(id)) {
+        for (int i = 0; i < projectRepository.findAll().size(); i++) {
+            if(projectRepository.findAll().get(i).getProjectId().equals(id)) {
                 return true;
             }
         }

@@ -27,7 +27,7 @@ public class GetProjectsController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            List<ProjectDto> projects = projectRepository.projectsList();
+            List<ProjectDto> projects = projectRepository.findAll();
             req.setAttribute("projects", projects);
         } catch (SQLException e) {
             e.printStackTrace();
