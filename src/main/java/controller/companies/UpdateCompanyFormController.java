@@ -32,12 +32,11 @@ public class UpdateCompanyFormController extends HttpServlet {
         CheckCompanies checkCompanies = new CheckCompanies();
 
         try {
-            Integer companyId = Integer.parseInt(req.getParameter("companyId"));
             CompanyDao company = new CompanyDao();
-            company.setCompanyId(companyId);
+            company.setCompanyId(Integer.parseInt(req.getParameter("companyId")));
             company.setName(req.getParameter("companyName"));
             company.setCountry(req.getParameter("country"));
-            if (checkCompanies.IsCompanyIdExists(companyId)) {
+            if (checkCompanies.IsCompanyIdExists(company.getCompanyId())) {
                 companyRepository.update(company);
                 req.getRequestDispatcher("/WEB-INF/view/companies/companyUpdated.jsp").forward(req, resp);
             } else {

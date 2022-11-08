@@ -32,12 +32,11 @@ public class CreateCustomerFormController extends HttpServlet {
         CheckCustomers checkCustomers = new CheckCustomers();
 
         try {
-            Integer customerId = Integer.parseInt(req.getParameter("customerId"));
             CustomerDao customer = new CustomerDao();
-            customer.setCustomerId(customerId);
+            customer.setCustomerId(Integer.parseInt(req.getParameter("customerId")));
             customer.setName(req.getParameter("customerName"));
             customer.setCountry(req.getParameter("country"));
-            if (checkCustomers.IsCustomerIdExists(customerId)) {
+            if (checkCustomers.IsCustomerIdExists(customer.getCustomerId())) {
                 req.getRequestDispatcher("/WEB-INF/view/customers/customerIdAlreadyExists.jsp").forward(req, resp);
             } else {
                 customerRepository.create(customer);
