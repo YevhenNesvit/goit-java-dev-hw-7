@@ -36,15 +36,14 @@ public class UpdateProjectFormController extends HttpServlet {
         CheckCompanies checkCompanies = new CheckCompanies();
 
         try {
-            Integer projectId = Integer.parseInt(req.getParameter("projectId"));
             ProjectDao project = new ProjectDao();
-            project.setProjectId(projectId);
+            project.setProjectId(Integer.parseInt(req.getParameter("projectId")));
             project.setName(req.getParameter("projectName"));
             project.setCustomerId(Integer.parseInt(req.getParameter("customerId")));
             project.setCompanyId(Integer.parseInt(req.getParameter("companyId")));
             project.setCost(Integer.parseInt(req.getParameter("cost")));
             project.setCreationDate(java.sql.Date.valueOf(req.getParameter("creationDate")));
-            if (checkProjects.IsProjectIdExists(projectId)) {
+            if (checkProjects.IsProjectIdExists(project.getProjectId())) {
                 if (checkCustomers.IsCustomerIdExists(project.getCustomerId())) {
                     if (checkCompanies.IsCompanyIdExists(project.getCompanyId())) {
                         projectRepository.update(project);

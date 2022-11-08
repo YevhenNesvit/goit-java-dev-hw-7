@@ -32,12 +32,11 @@ public class CreateSkillFormController extends HttpServlet {
         CheckSkills checkSkills = new CheckSkills();
 
         try {
-            Integer skillId = Integer.parseInt(req.getParameter("skillId"));
             SkillDao skill = new SkillDao();
-            skill.setSkillId(skillId);
+            skill.setSkillId(Integer.parseInt(req.getParameter("skillId")));
             skill.setName(req.getParameter("skillName"));
             skill.setSkillLevel(req.getParameter("skillLevel"));
-            if (checkSkills.IsSkillIdExists(skillId)) {
+            if (checkSkills.IsSkillIdExists(skill.getSkillId())) {
                 req.getRequestDispatcher("/WEB-INF/view/skills/skillIdAlreadyExists.jsp").forward(req, resp);
             } else {
                 skillRepository.create(skill);
