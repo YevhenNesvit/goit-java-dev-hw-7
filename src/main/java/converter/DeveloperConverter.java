@@ -24,11 +24,6 @@ public class DeveloperConverter implements Converter<DeveloperDto, DeveloperDao>
     }
 
     @Override
-    public DeveloperDao to(DeveloperDto entity) {
-        return null;
-    }
-
-    @Override
     public List<DeveloperDto> fromList(List<DeveloperDao> list) {
         List<DeveloperDto> dtoList = new ArrayList<>();
 

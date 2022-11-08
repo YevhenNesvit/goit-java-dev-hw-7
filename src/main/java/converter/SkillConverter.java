@@ -20,11 +20,6 @@ public class SkillConverter implements Converter<SkillDto, SkillDao> {
     }
 
     @Override
-    public SkillDao to(SkillDto entity) {
-        return null;
-    }
-
-    @Override
     public List<SkillDto> fromList(List<SkillDao> list) {
         List<SkillDto> dtoList = new ArrayList<>();
 

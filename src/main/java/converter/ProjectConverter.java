@@ -21,11 +21,6 @@ public class ProjectConverter implements Converter<ProjectDto, ProjectDao> {
     }
 
     @Override
-    public ProjectDao to(ProjectDto entity) {
-        return null;
-    }
-
-    @Override
     public List<ProjectDto> fromList(List<ProjectDao> list) {
         List<ProjectDto> dtoList = new ArrayList<>();
 

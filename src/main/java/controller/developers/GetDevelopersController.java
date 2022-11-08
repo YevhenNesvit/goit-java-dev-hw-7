@@ -27,7 +27,7 @@ public class GetDevelopersController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            List<DeveloperDto> developers = developerRepository.developersList();
+            List<DeveloperDto> developers = developerRepository.findAll();
             req.setAttribute("developers", developers );
         } catch (SQLException e) {
             e.printStackTrace();

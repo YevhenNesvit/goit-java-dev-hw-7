@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import java.sql.SQLException;
 import java.util.*;
 
-public class DeveloperRepository {
+public class DeveloperRepository implements Repository<DeveloperDto, List<DeveloperDto>, DeveloperDao> {
     DeveloperConverter developerConverter = new DeveloperConverter();
     private final HibernateProvider provider;
 
@@ -88,7 +88,8 @@ public class DeveloperRepository {
         return new ArrayList<>();
     }
 
-    public List<DeveloperDto> developersList() throws SQLException {
+    @Override
+    public List<DeveloperDto> findAll() throws SQLException {
 
         try (final Session session = provider.openSession()) {
             List<DeveloperDao> list = session.createQuery("FROM Developer ORDER BY developerId", DeveloperDao.class)
@@ -103,7 +104,8 @@ public class DeveloperRepository {
         return new ArrayList<>();
     }
 
-    public DeveloperDto developerById(Integer id) {
+    @Override
+    public DeveloperDto findById(Integer id) {
 
         try (final Session session = provider.openSession()) {
             DeveloperDao developer = session.createQuery("FROM Developer WHERE developerId = :id", DeveloperDao.class)
@@ -119,16 +121,8 @@ public class DeveloperRepository {
         return new DeveloperDto();
     }
 
-    public void updateDeveloper(Integer id, String firstName, String lastName, String gender, Integer age, Integer companyId,
-                                Integer salary) {
-        DeveloperDao developer = new DeveloperDao();
-        developer.setDeveloperId(id);
-        developer.setFirstName(firstName);
-        developer.setLastName(lastName);
-        developer.setGender(gender);
-        developer.setAge(age);
-        developer.setCompanyId(companyId);
-        developer.setSalary(salary);
+    @Override
+    public void update(DeveloperDao developer) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();
@@ -139,7 +133,8 @@ public class DeveloperRepository {
         }
     }
 
-    public void deleteDeveloper(Integer id) {
+    @Override
+    public void delete(Integer id) {
         DeveloperDao developer = new DeveloperDao();
         developer.setDeveloperId(id);
 
@@ -152,16 +147,8 @@ public class DeveloperRepository {
         }
     }
 
-    public void createDeveloper(Integer id, String firstName, String lastName, String gender, Integer age,
-                                Integer companyId, Integer salary) {
-        DeveloperDao developer = new DeveloperDao();
-        developer.setDeveloperId(id);
-        developer.setFirstName(firstName);
-        developer.setLastName(lastName);
-        developer.setGender(gender);
-        developer.setAge(age);
-        developer.setCompanyId(companyId);
-        developer.setSalary(salary);
+    @Override
+    public void create(DeveloperDao developer) {
 
         try (final Session session = provider.openSession()) {
             final Transaction transaction = session.beginTransaction();

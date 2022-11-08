@@ -33,7 +33,7 @@ public class DeleteDeveloperFormController extends HttpServlet {
         try {
             Integer developerId = Integer.parseInt(req.getParameter("developerId"));
             if (checkDevelopers.IsDeveloperIdExists(developerId)) {
-                developerRepository.deleteDeveloper(developerId);
+                developerRepository.delete(developerId);
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerDeleted.jsp").forward(req, resp);
             } else {
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerIdNotExists.jsp").forward(req, resp);

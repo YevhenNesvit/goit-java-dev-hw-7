@@ -19,11 +19,6 @@ public class CustomerConverter implements Converter<CustomerDto, CustomerDao>{
     }
 
     @Override
-    public CustomerDao to(CustomerDto entity) {
-        return null;
-    }
-
-    @Override
     public List<CustomerDto> fromList(List<CustomerDao> list) {
         List<CustomerDto> dtoList = new ArrayList<>();
 

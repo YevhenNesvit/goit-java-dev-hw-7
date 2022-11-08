@@ -38,7 +38,7 @@ public class GetDeveloperByIdFormController extends HttpServlet {
             List<DeveloperDto> developers = new ArrayList<>();
             Integer developerId = Integer.parseInt(req.getParameter("developerId"));
             if (checkDevelopers.IsDeveloperIdExists(developerId)) {
-                developers.add(developerRepository.developerById(developerId));
+                developers.add(developerRepository.findById(developerId));
                 req.setAttribute("developers", developers);
                 req.getRequestDispatcher("/WEB-INF/view/developers/developerById.jsp").forward(req, resp);
             } else {

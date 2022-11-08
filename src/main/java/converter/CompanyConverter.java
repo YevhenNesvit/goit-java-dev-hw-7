@@ -19,11 +19,6 @@ public class CompanyConverter implements Converter<CompanyDto, CompanyDao> {
     }
 
     @Override
-    public CompanyDao to(CompanyDto entity) {
-        return null;
-    }
-
-    @Override
     public List<CompanyDto> fromList(List<CompanyDao> list) {
         List<CompanyDto> dtoList = new ArrayList<>();
 
